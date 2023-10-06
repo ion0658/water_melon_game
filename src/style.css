@@ -1,0 +1,13 @@
+canvas {
+    background-color: azure;
+    margin: auto auto;
+}
+
+#drop_point {
+    width: 1000px;
+}
+
+#info_area {
+    background-color: antiquewhite;
+    margin: 2rem auto;
+}
