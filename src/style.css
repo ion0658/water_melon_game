@@ -3,6 +3,12 @@ canvas {
     margin: auto auto;
 }
 
+button#drop_button {
+    margin: 1rem auto;
+    width: 10rem;
+    height: 2rem;
+}
+
 #drop_point {
     width: 1000px;
 }
