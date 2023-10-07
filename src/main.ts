@@ -166,30 +166,27 @@ function draw_drop_queue() {
 }
 
 function draw_balls() {
-    balls.forEach((ball) => {
-        ball.move(PLAY_AREA_MAX_X, canvas.height - PLAY_AREA_PADDING);
-    });
-
-    for (let idx = 0, other_idx = 0; idx < balls.length; other_idx = other_idx < balls.length - 1 ? other_idx + 1 : 0, idx = other_idx === 0 ? idx + 1 : idx) {
-        if (idx === other_idx) {
-            continue;
-        }
+    for (let idx = 0; idx < balls.length; idx++) {
         const ball = balls[idx];
-        const other = balls[other_idx];
-        if (calc_collision(ball, other, PLAY_AREA_MAX_X, canvas.height - PLAY_AREA_PADDING)) {
-            if (ball === tmp_ball || other === tmp_ball) {
-                tmp_ball = null;
-            }
-            if (ball.is_same_ball_type(other)) {
-                ball.upgrade_ball_type();
-                ball.set_point({ x: (ball.get_point().x + other.get_point().x) / 2, y: (ball.get_point().y + other.get_point().y) / 2 }, PLAY_AREA_MAX_X, canvas.height - PLAY_AREA_PADDING);
-                balls.splice(other_idx, 1);
-                score += ball.get_score();
+        for (let other_idx = idx + 1; other_idx < balls.length; other_idx++) {
+            const other = balls[other_idx];
+            if (calc_collision(ball, other, PLAY_AREA_MAX_X, canvas.height - PLAY_AREA_PADDING)) {
+                if (ball === tmp_ball || other === tmp_ball) {
+                    tmp_ball = null;
+                }
+                if (ball.is_same_ball_type(other)) {
+                    ball.upgrade_ball_type();
+                    ball.set_point({ x: (ball.get_point().x + other.get_point().x) / 2, y: (ball.get_point().y + other.get_point().y) / 2 }, PLAY_AREA_MAX_X, canvas.height - PLAY_AREA_PADDING);
+                    ball.set_velocity({ x: (ball.get_velocity().x + other.get_velocity().x) / 2, y: (ball.get_velocity().y + other.get_velocity().y) / 2 });
+                    balls.splice(other_idx, 1);
+                    score += ball.get_score();
+                }
             }
         }
     }
 
     balls.forEach((ball) => {
+        ball.move(PLAY_AREA_MAX_X, canvas.height - PLAY_AREA_PADDING);
         ball.draw(ctx);
     });
 }
