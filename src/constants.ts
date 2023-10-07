@@ -1,7 +1,7 @@
 export const FPS = 60;
 const G_ACCEL = 10;
-export const COEFFICIENT_OF_RESTITUTION = 0.5;
-export const WALL_COEFFICIENT_OF_RESTITUTION = 0;
+export const COEFFICIENT_OF_RESTITUTION = 0.9;
+export const WALL_COEFFICIENT_OF_RESTITUTION = 0.9;
 export const FRAME_TIME_MSEC = 1000 / FPS;
 export const FRAME_PER_ACCEL = G_ACCEL / FPS;
 export const PLAY_AREA_PADDING = 10;

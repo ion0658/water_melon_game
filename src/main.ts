@@ -15,6 +15,7 @@ function reset() {
     balls = [];
     drop_queue = [];
     score = 0;
+    tmp_ball = null;
     init_drop_queue();
     set_range_input();
     set_drop_balls_position();
@@ -171,6 +172,10 @@ function draw_drop_queue() {
 }
 
 function draw_balls() {
+    balls.forEach((ball) => {
+        ball.move(PLAY_AREA_MAX_X, canvas.height - PLAY_AREA_PADDING);
+    });
+
     for (let idx = 0, other_idx = 0; idx < balls.length; other_idx = other_idx < balls.length - 1 ? other_idx + 1 : 0, idx = other_idx === 0 ? idx + 1 : idx) {
         if (idx === other_idx) {
             continue;
@@ -191,7 +196,6 @@ function draw_balls() {
     }
 
     balls.forEach((ball) => {
-        ball.move(PLAY_AREA_MAX_X, canvas.height - PLAY_AREA_PADDING);
         ball.draw(ctx);
     });
 }
