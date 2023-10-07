@@ -13,22 +13,20 @@ export function calc_collision(ball: Ball, other: Ball, canvas_width: number, ca
     if (distance > radius_sum) {
         return false;
     }
-    if (ball.is_same_ball_type(other)) {
-        return true;
-    }
 
-    // 重なってしまう場合は、重ならないように移動させる
+    // 重なっている場合は、重なっている分だけボールを移動させる
     const move_distance = radius_sum - distance;
-    const move_distance_x = (distance_x / distance) * move_distance;
-    const move_distance_y = (distance_y / distance) * move_distance;
-    ball.set_point({ x: ball.point.x + move_distance_x, y: ball.point.y + move_distance_y }, canvas_width, canvas_height);
-    other.set_point({ x: other.point.x - move_distance_x, y: other.point.y - move_distance_y }, canvas_width, canvas_height);
+    const move_distance_x = move_distance * (distance_x / distance);
+    const move_distance_y = move_distance * (distance_y / distance);
+
+    ball.set_point({ x: ball.point.x + move_distance_x / 2, y: ball.point.y + move_distance_y / 2 }, canvas_width, canvas_height);
+    other.set_point({ x: other.point.x - move_distance_x / 2, y: other.point.y - move_distance_y / 2 }, canvas_width, canvas_height);
 
     // 2次元の衝突後の速度を求める
     const { result_velocity1, result_velocity2 } = calc_collision_velocity(ball, other);
     ball.set_velocity(result_velocity1);
     other.set_velocity(result_velocity2);
-    return false;
+    return true;
 }
 
 function calc_collision_velocity(ball: Ball, other: Ball): { result_velocity1: Vector2; result_velocity2: Vector2 } {
@@ -55,9 +53,8 @@ function calc_collision_formula(mass: number, velocity: Vector2, bounce: number,
 
 /// 内積の計算
 function calc_inner_product(vec: Vector2, UnitVector: Vector2): Vector2 {
-    let scalar = vec.x * UnitVector.x + vec.y * UnitVector.y;
-    let Vector: Vector2 = { x: UnitVector.x * scalar, y: UnitVector.y * scalar };
-    return Vector;
+    const scalar = vec.x * UnitVector.x + vec.y * UnitVector.y;
+    return { x: UnitVector.x * scalar, y: UnitVector.y * scalar };
 }
 
 /// 当たった物の軸に水平な方向ベクトルの計算
@@ -81,9 +78,7 @@ function calc_horizontal_velocity(pos: Vector2, colPos: Vector2, myVel: Vector2)
         dirVector.y *= unitVector;
     }
     // 当たった者同士の軸方向の内積の大きさのベクトルを求める
-    let horizontalVecter: Vector2 = calc_inner_product(myVel, dirVector);
-
-    return horizontalVecter;
+    return calc_inner_product(myVel, dirVector);
 }
 
 /// 引数に対して垂直な単位ベクトルの作成
@@ -100,6 +95,6 @@ function create_vertical_vector(vector: Vector2): Vector2 {
 
 /// 与えられたベクトル(axis)に対しての垂直ベクトルを求める
 function calc_vertical_velocity(axis: Vector2, myVec: Vector2): Vector2 {
-    let unitVerticalAxis: Vector2 = create_vertical_vector(axis);
+    const unitVerticalAxis: Vector2 = create_vertical_vector(axis);
     return calc_inner_product(myVec, unitVerticalAxis);
 }

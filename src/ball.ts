@@ -1,4 +1,4 @@
-import { BallType, get_next_ball_type } from "./constants";
+import { BallType, MIN_VELOCITY, PLAY_AREA_MIN_X, WALL_COEFFICIENT_OF_RESTITUTION, get_next_ball_type } from "./constants";
 
 export class Ball {
     point: Vector2;
@@ -16,16 +16,17 @@ export class Ball {
     get_radius(): number {
         return this.ball_type.radius;
     }
-
     get_color(): string {
         return this.ball_type.color;
     }
     get_mass(): number {
         return this.ball_type.mass;
     }
-
     is_same_ball_type(other: Ball): boolean {
         return this.ball_type === other.ball_type;
+    }
+    get_score(): number {
+        return this.ball_type.score;
     }
 
     upgrade_ball_type() {
@@ -45,8 +46,8 @@ export class Ball {
         if (this.point.x + this.get_radius() > max_x) {
             this.point.x = max_x - this.get_radius();
         }
-        if (this.point.x - this.get_radius() < 0) {
-            this.point.x = this.get_radius();
+        if (this.point.x - this.get_radius() < PLAY_AREA_MIN_X) {
+            this.point.x = this.get_radius() + PLAY_AREA_MIN_X;
         }
         if (this.point.y + this.get_radius() > max_y) {
             this.point.y = max_y - this.get_radius();
@@ -59,20 +60,23 @@ export class Ball {
     move(max_x: number, max_y: number) {
         this.point.x += this.velocity.x;
         this.point.y += this.velocity.y;
-        this.velocity.x += this.acceleration.x;
-        this.velocity.y += this.acceleration.y;
         if (this.point.x + this.get_radius() > max_x) {
             this.point.x = max_x - this.get_radius();
-            this.velocity.x = 0;
+            const new_velocity = this.velocity.x * -1 * WALL_COEFFICIENT_OF_RESTITUTION;
+            this.velocity.x = Math.abs(new_velocity) > MIN_VELOCITY ? new_velocity : 0;
         }
-        if (this.point.x - this.get_radius() < 0) {
-            this.point.x = this.get_radius();
-            this.velocity.x = 0;
+        if (this.point.x - this.get_radius() < PLAY_AREA_MIN_X) {
+            this.point.x = this.get_radius() + PLAY_AREA_MIN_X;
+            const new_velocity = this.velocity.x * -1 * WALL_COEFFICIENT_OF_RESTITUTION;
+            this.velocity.x = Math.abs(new_velocity) > MIN_VELOCITY ? new_velocity : 0;
         }
         if (this.point.y + this.get_radius() > max_y) {
             this.point.y = max_y - this.get_radius();
-            this.velocity.y = 0;
+            const new_velocity = this.velocity.y * -1 * WALL_COEFFICIENT_OF_RESTITUTION;
+            this.velocity.y = Math.abs(new_velocity) > MIN_VELOCITY ? new_velocity : 0;
         }
+        this.velocity.x += this.acceleration.x;
+        this.velocity.y += this.acceleration.y;
     }
 
     draw(ctx: CanvasRenderingContext2D) {

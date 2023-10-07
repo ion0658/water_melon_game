@@ -10,10 +10,11 @@
 
 <body>
     <div id="info_area">
-        <button id="drop_button">drop</button>
-        <input id="drop_point" type="range" />
-        <label>drop point: <output id="drop_point_value"></output></label>
+        <button id="drop_button" type="button">drop</button>
+        <label>Drop point: <output id="drop_point_value"></output></label>
+        <lavel>Score: <output id="current_score"></output></lavel>
     </div>
+    <input id="drop_point" type="range" step="1" />
     <div id="game_area">
         <canvas id="main_canvas"></canvas>
     </div>
