@@ -113,7 +113,7 @@ document.addEventListener("keydown", (e) => {
 });
 
 document.getElementById("drop_button")?.addEventListener("click", drop_ball);
-
+document.getElementById("reset_button")?.addEventListener("click", reset);
 document.getElementById("drop_point")?.addEventListener("input", (e) => {
     const input = e.target as HTMLInputElement;
     const first_ball = drop_queue[0]!;
