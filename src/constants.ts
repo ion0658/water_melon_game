@@ -1,5 +1,5 @@
 export const FPS = 60;
-const G_ACCEL = 1;
+const G_ACCEL = 2;
 export const COEFFICIENT_OF_RESTITUTION = 0;
 export const WALL_COEFFICIENT_OF_RESTITUTION = 0;
 export const FRAME_TIME_MSEC = 1000 / FPS;
@@ -9,16 +9,16 @@ export const MIN_VELOCITY = FRAME_PER_ACCEL * 2;
 
 export const BallTypes = {
     CHERRY: { radius: 10, color: "#FF0000", mass: 1, score: 1024 },
-    STRAWBERRY: { radius: 20, color: "#FF00FF", mass: 2, score: 1 },
-    GRAPE: { radius: 30, color: "#7E00FF", mass: 3, score: 2 },
-    ORANGE: { radius: 40, color: "#FF9E00", mass: 4, score: 4 },
-    PERSIMMON: { radius: 50, color: "#FF7E00", mass: 5, score: 8 },
-    APPLE: { radius: 60, color: "#7E0000", mass: 6, score: 16 },
-    PEAR: { radius: 70, color: "#7E7E00", mass: 7, score: 32 },
-    PEACH: { radius: 80, color: "#FF7EFF", mass: 8, score: 64 },
-    PINEAPPLE: { radius: 90, color: "#FFFF00", mass: 9, score: 128 },
-    MELON: { radius: 100, color: "#7EFF00", mass: 10, score: 256 },
-    WATERMELON: { radius: 110, color: "#00FF00", mass: 11, score: 512 },
+    STRAWBERRY: { radius: 20, color: "#FF00FF", mass: 1, score: 1 },
+    GRAPE: { radius: 30, color: "#7E00FF", mass: 1, score: 2 },
+    ORANGE: { radius: 40, color: "#FF9E00", mass: 1, score: 4 },
+    PERSIMMON: { radius: 50, color: "#FF7E00", mass: 1, score: 8 },
+    APPLE: { radius: 60, color: "#7E0000", mass: 2, score: 16 },
+    PEAR: { radius: 70, color: "#7E7E00", mass: 2, score: 32 },
+    PEACH: { radius: 80, color: "#FF7EFF", mass: 2, score: 64 },
+    PINEAPPLE: { radius: 90, color: "#FFFF00", mass: 2, score: 128 },
+    MELON: { radius: 100, color: "#7EFF00", mass: 2, score: 256 },
+    WATERMELON: { radius: 110, color: "#00FF00", mass: 2, score: 512 },
 } as const;
 
 export type BallType = (typeof BallTypes)[keyof typeof BallTypes];

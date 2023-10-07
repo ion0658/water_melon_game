@@ -1,16 +1,24 @@
 import { BallType, MIN_VELOCITY, PLAY_AREA_MIN_X, WALL_COEFFICIENT_OF_RESTITUTION, get_next_ball_type } from "./constants";
 
 export class Ball {
-    point: Vector2;
-    velocity: Vector2;
-    acceleration: Vector2;
-    ball_type: BallType;
+    private point: Vector2;
+    private velocity: Vector2;
+    private acceleration: Vector2;
+    private ball_type: BallType;
 
     constructor(ball_type: BallType) {
         this.point = { x: 0, y: 0 };
         this.velocity = { x: 0, y: 0 };
         this.acceleration = { x: 0, y: 0 };
         this.ball_type = ball_type;
+    }
+
+    get_point(): Vector2 {
+        return this.point;
+    }
+
+    get_velocity(): Vector2 {
+        return this.velocity;
     }
 
     get_radius(): number {

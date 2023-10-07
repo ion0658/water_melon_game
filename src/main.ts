@@ -25,29 +25,25 @@ function can_drop(): boolean {
     if (tmp_ball === null) {
         return true;
     } else {
-        const result = tmp_ball.point.y - tmp_ball.get_radius() > canvas.height - PLAY_AREA_PADDING * 2 - PLAY_AREA_HEIGHT;
+        const result = tmp_ball.get_point().y - tmp_ball.get_radius() > canvas.height - PLAY_AREA_PADDING * 2 - PLAY_AREA_HEIGHT;
         if (result) tmp_ball = null;
         return result;
     }
 }
 
 function main_loop() {
-    clear_canvas();
-    draw();
-    clear_canvas();
-    draw();
+    setTimeout(main_loop, FRAME_TIME_MSEC);
     clear_canvas();
     draw();
     if (is_game_over()) {
         alert(`Game Over! Your score is ${score}!`);
         reset();
     }
-    setTimeout(main_loop, FRAME_TIME_MSEC);
 }
 
 function is_game_over(): boolean {
     return balls.some((ball) => {
-        return ball.point.y + ball.get_radius() < canvas.height - PLAY_AREA_PADDING * 2 - PLAY_AREA_HEIGHT;
+        return ball.get_point().y + ball.get_radius() < canvas.height - PLAY_AREA_PADDING * 2 - PLAY_AREA_HEIGHT;
     });
 }
 
@@ -108,14 +104,14 @@ document.addEventListener("keydown", (e) => {
     }
     if (e.key === "ArrowLeft") {
         const first_ball = drop_queue[0]!;
-        first_ball.set_point({ x: first_ball.point.x - 1, y: first_ball.point.y }, PLAY_AREA_MAX_X, canvas.height);
+        first_ball.set_point({ x: first_ball.get_point().x - 1, y: first_ball.get_point().y }, PLAY_AREA_MAX_X, canvas.height);
     }
     if (e.key === "ArrowRight") {
         const first_ball = drop_queue[0]!;
-        first_ball.set_point({ x: first_ball.point.x + 1, y: first_ball.point.y }, PLAY_AREA_MAX_X, canvas.height);
+        first_ball.set_point({ x: first_ball.get_point().x + 1, y: first_ball.get_point().y }, PLAY_AREA_MAX_X, canvas.height);
     }
     const input_elm = document.getElementById("drop_point")! as HTMLInputElement;
-    input_elm.value = String(drop_queue[0]!.point.x);
+    input_elm.value = String(drop_queue[0]!.get_point().x);
     const output_elm = document.getElementById("drop_point_value")!;
     output_elm.textContent = input_elm.value;
 });
@@ -127,7 +123,7 @@ document.getElementById("drop_point")?.addEventListener("input", (e) => {
     const output_elm = document.getElementById("drop_point_value")!;
     output_elm.textContent = input.value;
     const first_ball = drop_queue[0]!;
-    first_ball.set_point({ x: parseInt(input.value), y: first_ball.point.y }, PLAY_AREA_MAX_X, canvas.height);
+    first_ball.set_point({ x: parseInt(input.value), y: first_ball.get_point().y }, PLAY_AREA_MAX_X, canvas.height);
 });
 
 function clear_canvas() {
@@ -163,8 +159,8 @@ function draw_drop_line() {
     const first_ball = drop_queue[0]!;
     ctx.beginPath();
     ctx.strokeStyle = "#222222";
-    ctx.moveTo(first_ball.point.x, first_ball.point.y + first_ball.get_radius());
-    ctx.lineTo(first_ball.point.x, canvas.height - PLAY_AREA_PADDING);
+    ctx.moveTo(first_ball.get_point().x, first_ball.get_point().y + first_ball.get_radius());
+    ctx.lineTo(first_ball.get_point().x, canvas.height - PLAY_AREA_PADDING);
     ctx.stroke();
 }
 
@@ -192,7 +188,7 @@ function draw_balls() {
             }
             if (ball.is_same_ball_type(other)) {
                 ball.upgrade_ball_type();
-                ball.set_point({ x: (ball.point.x + other.point.x) / 2, y: (ball.point.y + other.point.y) / 2 }, PLAY_AREA_MAX_X, canvas.height - PLAY_AREA_PADDING);
+                ball.set_point({ x: (ball.get_point().x + other.get_point().x) / 2, y: (ball.get_point().y + other.get_point().y) / 2 }, PLAY_AREA_MAX_X, canvas.height - PLAY_AREA_PADDING);
                 balls.splice(other_idx, 1);
                 score += ball.get_score();
             }

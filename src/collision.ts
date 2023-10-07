@@ -3,8 +3,8 @@ import { COEFFICIENT_OF_RESTITUTION } from "./constants";
 
 export function calc_collision(ball: Ball, other: Ball, canvas_width: number, canvas_height: number): boolean {
     // 2点間の距離を求める
-    const distance_x = ball.point.x - other.point.x;
-    const distance_y = ball.point.y - other.point.y;
+    const distance_x = ball.get_point().x - other.get_point().x;
+    const distance_y = ball.get_point().y - other.get_point().y;
     const distance = Math.sqrt(Math.pow(distance_x, 2) + Math.pow(distance_y, 2));
 
     // 2つのボールの半径の和を求める
@@ -19,8 +19,8 @@ export function calc_collision(ball: Ball, other: Ball, canvas_width: number, ca
     const move_distance_x = move_distance * (distance_x / distance);
     const move_distance_y = move_distance * (distance_y / distance);
 
-    ball.set_point({ x: ball.point.x + move_distance_x / 2, y: ball.point.y + move_distance_y / 2 }, canvas_width, canvas_height);
-    other.set_point({ x: other.point.x - move_distance_x / 2, y: other.point.y - move_distance_y / 2 }, canvas_width, canvas_height);
+    ball.set_point({ x: ball.get_point().x + move_distance_x / 2, y: ball.get_point().y + move_distance_y / 2 }, canvas_width, canvas_height);
+    other.set_point({ x: other.get_point().x - move_distance_x / 2, y: other.get_point().y - move_distance_y / 2 }, canvas_width, canvas_height);
 
     // 2次元の衝突後の速度を求める
     const { result_velocity1, result_velocity2 } = calc_collision_velocity(ball, other);
@@ -30,10 +30,10 @@ export function calc_collision(ball: Ball, other: Ball, canvas_width: number, ca
 }
 
 function calc_collision_velocity(ball: Ball, other: Ball): { result_velocity1: Vector2; result_velocity2: Vector2 } {
-    const vh1 = calc_horizontal_velocity(ball.point, other.point, ball.velocity);
-    const vv1 = calc_vertical_velocity(vh1, ball.velocity);
-    const vh2 = calc_horizontal_velocity(other.point, ball.point, other.velocity);
-    const vv2 = calc_vertical_velocity(vh2, other.velocity);
+    const vh1 = calc_horizontal_velocity(ball.get_point(), other.get_point(), ball.get_velocity());
+    const vv1 = calc_vertical_velocity(vh1, ball.get_velocity());
+    const vh2 = calc_horizontal_velocity(other.get_point(), ball.get_point(), other.get_velocity());
+    const vv2 = calc_vertical_velocity(vh2, other.get_velocity());
     const new_vh1 = calc_collision_formula(ball.get_mass(), vh1, COEFFICIENT_OF_RESTITUTION, other.get_mass(), vh2);
     const new_vh2 = calc_collision_formula(other.get_mass(), vh2, COEFFICIENT_OF_RESTITUTION, ball.get_mass(), vh1);
 
