@@ -1,4 +1,4 @@
-export const FPS = 60;
+export const FPS = 120;
 const G_ACCEL = 2;
 export const COEFFICIENT_OF_RESTITUTION = 0;
 export const WALL_COEFFICIENT_OF_RESTITUTION = 0;

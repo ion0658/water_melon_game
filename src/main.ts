@@ -5,6 +5,8 @@ import { calc_collision } from "./collision";
 
 const canvas = document.getElementById("main_canvas") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+const score_elm = document.getElementById("current_score") as HTMLOutputElement;
+const range_input_elm = document.getElementById("drop_point") as HTMLInputElement;
 
 let balls: Ball[] = [];
 let tmp_ball: Ball | null = null;
@@ -59,16 +61,14 @@ function init_drop_queue() {
 function set_drop_balls_position() {
     const first_ball = drop_queue[0]!;
     const second_ball = drop_queue[1]!;
-    const input_elm = document.getElementById("drop_point")! as HTMLInputElement;
-    first_ball.set_point({ x: parseInt(input_elm.value), y: canvas.height - PLAY_AREA_HEIGHT - PLAY_AREA_PADDING * 2 - first_ball.get_radius() }, PLAY_AREA_MAX_X, canvas.height);
+    first_ball.set_point({ x: parseInt(range_input_elm.value), y: canvas.height - PLAY_AREA_HEIGHT - PLAY_AREA_PADDING * 2 - first_ball.get_radius() }, PLAY_AREA_MAX_X, canvas.height);
     second_ball.set_point({ x: PLAY_AREA_MAX_X + DROPPABLE_LARGEST_BALL.radius + PLAY_AREA_PADDING * 2, y: DROPPABLE_LARGEST_BALL.radius + PLAY_AREA_PADDING * 2 }, canvas.width, canvas.height);
 }
 
 function set_range_input() {
-    const range_input = document.getElementById("drop_point") as HTMLInputElement;
     const first_ball = drop_queue[0]!;
-    range_input.max = String(PLAY_AREA_MAX_X - first_ball.get_radius());
-    range_input.min = String(first_ball.get_radius() + PLAY_AREA_PADDING);
+    range_input_elm.max = String(PLAY_AREA_MAX_X - first_ball.get_radius());
+    range_input_elm.min = String(first_ball.get_radius() + PLAY_AREA_PADDING);
 }
 
 function drop_ball() {
@@ -108,8 +108,7 @@ document.addEventListener("keydown", (e) => {
         const first_ball = drop_queue[0]!;
         first_ball.set_point({ x: first_ball.get_point().x + 1, y: first_ball.get_point().y }, PLAY_AREA_MAX_X, canvas.height);
     }
-    const input_elm = document.getElementById("drop_point")! as HTMLInputElement;
-    input_elm.value = String(drop_queue[0]!.get_point().x);
+    range_input_elm.value = String(drop_queue[0]!.get_point().x);
 });
 
 document.getElementById("drop_button")?.addEventListener("click", drop_ball);
@@ -168,6 +167,7 @@ function draw_drop_queue() {
 function draw_balls() {
     for (let idx = 0; idx < balls.length; idx++) {
         const ball = balls[idx];
+        ball.move(PLAY_AREA_MAX_X, canvas.height - PLAY_AREA_PADDING);
         for (let other_idx = idx + 1; other_idx < balls.length; other_idx++) {
             const other = balls[other_idx];
             if (calc_collision(ball, other, PLAY_AREA_MAX_X, canvas.height - PLAY_AREA_PADDING)) {
@@ -183,12 +183,8 @@ function draw_balls() {
                 }
             }
         }
-    }
-
-    balls.forEach((ball) => {
-        ball.move(PLAY_AREA_MAX_X, canvas.height - PLAY_AREA_PADDING);
         ball.draw(ctx);
-    });
+    }
 }
 
 function draw() {
@@ -196,6 +192,5 @@ function draw() {
     draw_balls();
     draw_border();
 
-    const score_elm = document.getElementById("current_score")!;
     score_elm.textContent = String(score);
 }
