@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
-    base: "/<REPO>/",
+    base: "/water_melon_game/",
 });
