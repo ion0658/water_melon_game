@@ -69,8 +69,6 @@ function set_range_input() {
     const first_ball = drop_queue[0]!;
     range_input.max = String(PLAY_AREA_MAX_X - first_ball.get_radius());
     range_input.min = String(first_ball.get_radius() + PLAY_AREA_PADDING);
-    const output_elm = document.getElementById("drop_point_value")!;
-    output_elm.textContent = range_input.value;
 }
 
 function drop_ball() {
@@ -112,16 +110,12 @@ document.addEventListener("keydown", (e) => {
     }
     const input_elm = document.getElementById("drop_point")! as HTMLInputElement;
     input_elm.value = String(drop_queue[0]!.get_point().x);
-    const output_elm = document.getElementById("drop_point_value")!;
-    output_elm.textContent = input_elm.value;
 });
 
 document.getElementById("drop_button")?.addEventListener("click", drop_ball);
 
 document.getElementById("drop_point")?.addEventListener("input", (e) => {
     const input = e.target as HTMLInputElement;
-    const output_elm = document.getElementById("drop_point_value")!;
-    output_elm.textContent = input.value;
     const first_ball = drop_queue[0]!;
     first_ball.set_point({ x: parseInt(input.value), y: first_ball.get_point().y }, PLAY_AREA_MAX_X, canvas.height);
 });
@@ -158,7 +152,7 @@ function draw_border() {
 function draw_drop_line() {
     const first_ball = drop_queue[0]!;
     ctx.beginPath();
-    ctx.strokeStyle = "#222222";
+    ctx.strokeStyle = "#7E7E7E";
     ctx.moveTo(first_ball.get_point().x, first_ball.get_point().y + first_ball.get_radius());
     ctx.lineTo(first_ball.get_point().x, canvas.height - PLAY_AREA_PADDING);
     ctx.stroke();
