@@ -34,6 +34,10 @@ function can_drop(): boolean {
 function main_loop() {
     clear_canvas();
     draw();
+    clear_canvas();
+    draw();
+    clear_canvas();
+    draw();
     if (is_game_over()) {
         alert(`Game Over! Your score is ${score}!`);
         reset();
