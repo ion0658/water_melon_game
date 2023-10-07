@@ -1,5 +1,5 @@
 export const FPS = 60;
-const G_ACCEL = 5;
+const G_ACCEL = 2;
 export const COEFFICIENT_OF_RESTITUTION = 0;
 export const WALL_COEFFICIENT_OF_RESTITUTION = 0;
 export const FRAME_TIME_MSEC = 1000 / FPS;
