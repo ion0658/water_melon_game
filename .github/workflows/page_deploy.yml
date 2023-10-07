@@ -1,0 +1,34 @@
+name: page_deploy
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          npm install
+          npm run build          
+      - uses: actions/upload-artifact@v3
+        with:
+          name: my_site
+          path: dist
+      - uses: actions/upload-pages-artifact@v1
+        with:
+          path: dist
+          
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest 
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/deploy-pages@v1
+        id: deployment
