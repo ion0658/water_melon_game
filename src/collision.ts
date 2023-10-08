@@ -1,5 +1,5 @@
 import { Ball } from "./ball";
-import { COEFFICIENT_OF_RESTITUTION, FRAME_PER_ACCEL } from "./constants";
+import { COEFFICIENT_OF_RESTITUTION, G_ACCEL } from "./constants";
 
 export function calc_collision(ball: Ball, other: Ball, canvas_width: number, canvas_height: number): boolean {
     // 2点間の距離を求める
@@ -23,7 +23,9 @@ export function calc_collision(ball: Ball, other: Ball, canvas_width: number, ca
     other.set_point({ x: other.get_point().x - move_distance_x / 2, y: other.get_point().y - move_distance_y / 2 }, canvas_width, canvas_height);
 
     if (ball.is_upgraded()) {
-        other.set_velocity({ x: distance_x > 0 ? -FRAME_PER_ACCEL * 10 : FRAME_PER_ACCEL * 10, y: distance_y > 0 ? -FRAME_PER_ACCEL * 10 : FRAME_PER_ACCEL * 10 });
+        const push_velocity = create_horizontal_vector(ball.get_point(), other.get_point(), G_ACCEL * 2);
+        console.log(push_velocity);
+        other.set_velocity({ x: other.get_velocity().x + push_velocity.x, y: other.get_velocity().y + push_velocity.y });
     }
 
     // 2次元の衝突後の速度を求める
@@ -63,8 +65,7 @@ function calc_inner_product(vec: Vector2, UnitVector: Vector2): Vector2 {
     return { x: UnitVector.x * scalar, y: UnitVector.y * scalar };
 }
 
-/// 当たった物の軸に水平な方向ベクトルの計算
-function calc_horizontal_velocity(pos: Vector2, colPos: Vector2, myVel: Vector2): Vector2 {
+function create_horizontal_vector(pos: Vector2, colPos: Vector2, size: number = 1): Vector2 {
     let dirVector: Vector2 = { x: colPos.x - pos.x, y: colPos.y - pos.y }; // 方向ベクトル
 
     // 当たった時の軸方向を求める
@@ -74,15 +75,20 @@ function calc_horizontal_velocity(pos: Vector2, colPos: Vector2, myVel: Vector2)
 
     // 単位ベクトルへ変換
     if (dirVector.x === 0) {
-        dirVector.y = dirVector.y > 0 ? 1 : -1;
+        dirVector.y = dirVector.y > 0 ? size : -size;
     } else if (dirVector.y === 0) {
-        dirVector.x = dirVector.x > 0 ? 1 : -1;
+        dirVector.x = dirVector.x > 0 ? size : -size;
     } else {
-        const unitVector = 1 / Math.sqrt(dirVector.x * dirVector.x + dirVector.y * dirVector.y);
+        const unitVector = size / Math.sqrt(dirVector.x * dirVector.x + dirVector.y * dirVector.y);
         dirVector.x *= unitVector;
         dirVector.y *= unitVector;
     }
-    // 当たった者同士の軸方向の内積の大きさのベクトルを求める
+    return dirVector;
+}
+
+/// 当たった物の軸に水平な方向ベクトルの計算
+function calc_horizontal_velocity(pos: Vector2, colPos: Vector2, myVel: Vector2): Vector2 {
+    const dirVector = create_horizontal_vector(pos, colPos);
     return calc_inner_product(myVel, dirVector);
 }
 
