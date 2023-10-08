@@ -1,5 +1,5 @@
 import { Ball } from "./ball";
-import { COEFFICIENT_OF_RESTITUTION } from "./constants";
+import { COEFFICIENT_OF_RESTITUTION, FRAME_PER_ACCEL } from "./constants";
 
 export function calc_collision(ball: Ball, other: Ball, canvas_width: number, canvas_height: number): boolean {
     // 2点間の距離を求める
@@ -21,6 +21,10 @@ export function calc_collision(ball: Ball, other: Ball, canvas_width: number, ca
 
     ball.set_point({ x: ball.get_point().x + move_distance_x / 2, y: ball.get_point().y + move_distance_y / 2 }, canvas_width, canvas_height);
     other.set_point({ x: other.get_point().x - move_distance_x / 2, y: other.get_point().y - move_distance_y / 2 }, canvas_width, canvas_height);
+
+    if (ball.is_upgraded()) {
+        other.set_velocity({ x: distance_x > 0 ? -FRAME_PER_ACCEL * 10 : FRAME_PER_ACCEL * 10, y: distance_y > 0 ? -FRAME_PER_ACCEL * 10 : FRAME_PER_ACCEL * 10 });
+    }
 
     // 2次元の衝突後の速度を求める
     const { result_velocity1, result_velocity2 } = calc_collision_velocity(ball, other);
