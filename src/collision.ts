@@ -24,7 +24,6 @@ export function calc_collision(ball: Ball, other: Ball, canvas_width: number, ca
 
     if (ball.is_upgraded()) {
         const push_velocity = create_horizontal_vector(ball.get_point(), other.get_point(), G_ACCEL * 2);
-        console.log(push_velocity);
         other.set_velocity({ x: other.get_velocity().x + push_velocity.x, y: other.get_velocity().y + push_velocity.y });
     }
 
@@ -45,18 +44,15 @@ function calc_collision_velocity(ball: Ball, other: Ball): { result_velocity1: V
     const new_vh1 = calc_collision_formula(ball.get_mass(), vh1, COEFFICIENT_OF_RESTITUTION, other.get_mass(), vh2);
     const new_vh2 = calc_collision_formula(other.get_mass(), vh2, COEFFICIENT_OF_RESTITUTION, ball.get_mass(), vh1);
 
-    const result_velocity1 = { x: new_vh1.x + vv1.x, y: new_vh1.y + vv1.y };
-    const result_velocity2 = { x: new_vh2.x + vv2.x, y: new_vh2.y + vv2.y };
-    return { result_velocity1, result_velocity2 };
+    return { result_velocity1: { x: new_vh1.x + vv1.x, y: new_vh1.y + vv1.y }, result_velocity2: { x: new_vh2.x + vv2.x, y: new_vh2.y + vv2.y } };
 }
 
 /// 衝突の公式
 function calc_collision_formula(mass: number, velocity: Vector2, bounce: number, col_mass: number, col_velocity: Vector2): Vector2 {
-    let resultVelocity: Vector2 = { x: 0, y: 0 };
-    resultVelocity.x = ((mass - bounce * col_mass) * velocity.x + (1 + bounce) * col_mass * col_velocity.x) / (mass + col_mass);
-    resultVelocity.y = ((mass - bounce * col_mass) * velocity.y + (1 + bounce) * col_mass * col_velocity.y) / (mass + col_mass);
-
-    return resultVelocity;
+    return {
+        x: ((mass - bounce * col_mass) * velocity.x + (1 + bounce) * col_mass * col_velocity.x) / (mass + col_mass),
+        y: ((mass - bounce * col_mass) * velocity.y + (1 + bounce) * col_mass * col_velocity.y) / (mass + col_mass),
+    };
 }
 
 /// 内積の計算
@@ -88,8 +84,7 @@ function create_horizontal_vector(pos: Vector2, colPos: Vector2, size: number = 
 
 /// 当たった物の軸に水平な方向ベクトルの計算
 function calc_horizontal_velocity(pos: Vector2, colPos: Vector2, myVel: Vector2): Vector2 {
-    const dirVector = create_horizontal_vector(pos, colPos);
-    return calc_inner_product(myVel, dirVector);
+    return calc_inner_product(myVel, create_horizontal_vector(pos, colPos));
 }
 
 /// 引数に対して垂直な単位ベクトルの作成
@@ -106,6 +101,5 @@ function create_vertical_vector(vector: Vector2): Vector2 {
 
 /// 与えられたベクトル(axis)に対しての垂直ベクトルを求める
 function calc_vertical_velocity(axis: Vector2, myVec: Vector2): Vector2 {
-    const unitVerticalAxis: Vector2 = create_vertical_vector(axis);
-    return calc_inner_product(myVec, unitVerticalAxis);
+    return calc_inner_product(myVec, create_vertical_vector(axis));
 }
