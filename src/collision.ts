@@ -23,7 +23,7 @@ export function calc_collision(ball: Ball, other: Ball, canvas_width: number, ca
     other.set_point({ x: other.get_point().x - move_distance_x / 2, y: other.get_point().y - move_distance_y / 2 }, canvas_width, canvas_height);
 
     if (ball.is_upgraded()) {
-        const push_velocity = create_horizontal_vector(ball.get_point(), other.get_point(), G_ACCEL * 2);
+        const push_velocity = create_horizontal_vector(ball.get_point(), other.get_point(), G_ACCEL);
         other.set_velocity({ x: other.get_velocity().x + push_velocity.x, y: other.get_velocity().y + push_velocity.y });
     }
 
