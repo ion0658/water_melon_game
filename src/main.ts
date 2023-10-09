@@ -13,6 +13,26 @@ let tmp_ball: Ball | null = null;
 let drop_queue: Ball[] = [];
 let score = 0;
 
+// save best 3 score to local storage
+function save_score(score: number) {
+    const scores = JSON.parse(localStorage.getItem("scores") || "[]");
+    scores.push(score);
+    scores.sort((a: number, b: number) => b - a);
+    localStorage.setItem("scores", JSON.stringify(scores.slice(0, 3)));
+}
+
+// load best 3 score from local storage
+function load_score() {
+    const scores = JSON.parse(localStorage.getItem("scores") || "[]");
+    const score_elm = document.getElementById("high_scores") as HTMLOListElement;
+    score_elm.innerHTML = "";
+    scores.forEach((score: number) => {
+        const li = document.createElement("li");
+        li.textContent = String(score);
+        score_elm.appendChild(li);
+    });
+}
+
 function reset() {
     balls = [];
     drop_queue = [];
@@ -21,6 +41,7 @@ function reset() {
     init_drop_queue();
     set_range_input();
     set_drop_balls_position();
+    load_score();
 }
 
 function can_drop(): boolean {
@@ -39,6 +60,7 @@ function main_loop() {
     draw();
     if (is_game_over()) {
         alert(`Game Over! Your score is ${score}!`);
+        save_score(score);
         reset();
     }
 }
@@ -89,9 +111,7 @@ function drop_ball() {
 document.addEventListener("DOMContentLoaded", () => {
     canvas.width = PLAY_AREA_MAX_X + DROPPABLE_LARGEST_BALL.radius * 2 + PLAY_AREA_PADDING * 4;
     canvas.height = PLAY_AREA_PADDING * 2 + PLAY_AREA_HEIGHT + DROP_AREA_HEIGHT;
-    init_drop_queue();
-    set_range_input();
-    set_drop_balls_position();
+    reset();
     main_loop();
 });
 

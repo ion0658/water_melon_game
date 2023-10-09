@@ -7,21 +7,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Water Melon Game</title>
     <!-- Google tag (gtag.js) -->
-
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BF51Y220HC"></script>
 </head>
 
 <body>
-    <div><label>Score: <output id="current_score"></output></label></div>
-    <div id="info_area">
-        <button id="drop_button" type="button">drop</button>
-        <button id="reset_button" type="button">reset</button>
+    <div>
+        <label>Score: <output id="current_score"></output></label>
     </div>
-    <input id="drop_point" type="range" step="1" />
+    <div>
+        <button id="drop_button" type="button">drop</button>
+    </div>
+    <div>
+        <input id="drop_point" type="range" step="1" />
+    </div>
     <div id="game_area">
         <canvas id="main_canvas"></canvas>
     </div>
+    <div>
+        <button id="reset_button" type="button">reset</button>
+    </div>
+
+    <div>
+        <label>High Scores</label>
+        <ol id="high_scores">
+
+        </ol>
+    </div>
+
     <script type="module" src="/src/main.ts"></script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BF51Y220HC"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
