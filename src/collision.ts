@@ -25,12 +25,13 @@ export function calc_collision(ball: Ball, other: Ball, canvas_width: number, ca
     if (ball.is_upgraded()) {
         const push_velocity = create_horizontal_vector(ball.get_point(), other.get_point(), ACCEL_SIZE);
         other.set_velocity({ x: other.get_velocity().x + push_velocity.x, y: other.get_velocity().y + push_velocity.y });
+        return true;
     }
-
     // 2次元の衝突後の速度を求める
     const { result_velocity1, result_velocity2 } = calc_collision_velocity(ball, other);
     ball.set_velocity(result_velocity1);
     other.set_velocity(result_velocity2);
+
     return true;
 }
 

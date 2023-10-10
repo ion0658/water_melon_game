@@ -214,10 +214,10 @@ if (import.meta.env.DEV) {
                     output_elm.textContent = String(ball_type.mass);
                 });
 
-                div_elm.appendChild(inner_div_elm);
                 inner_div_elm.appendChild(label_elm);
                 inner_div_elm.appendChild(input_elm);
                 inner_div_elm.appendChild(output_elm);
+                div_elm.appendChild(inner_div_elm);
             }
 
             parent.appendChild(div_elm);
