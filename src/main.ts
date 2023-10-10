@@ -32,8 +32,12 @@ function save_score(score: number) {
 }
 
 // load best 3 score from local storage
-function load_score() {
+function load_score(): number[] {
     const scores = JSON.parse(localStorage.getItem("scores") || "[]");
+    return scores;
+}
+
+function draw_high_scores(scores: number[]) {
     const score_elm = document.getElementById("high_scores") as HTMLOListElement;
     score_elm.innerHTML = "";
     scores.forEach((score: number) => {
@@ -51,7 +55,7 @@ function reset() {
     init_drop_queue();
     set_range_input();
     set_drop_balls_position();
-    load_score();
+    draw_high_scores(load_score());
 }
 
 function can_drop(): boolean {
