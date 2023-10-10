@@ -1,5 +1,15 @@
 import "./style.css";
-import { DROPPABLE_BALL_TYPES, FRAME_PER_ACCEL, FRAME_TIME_MSEC, DROPPABLE_LARGEST_BALL, PLAY_AREA_HEIGHT, DROP_AREA_HEIGHT, PLAY_AREA_PADDING, PLAY_AREA_MAX_X } from "./constants";
+import {
+    DROPPABLE_BALL_TYPES,
+    FRAME_TIME_MSEC,
+    DROPPABLE_LARGEST_BALL,
+    PLAY_AREA_HEIGHT,
+    DROP_AREA_HEIGHT,
+    PLAY_AREA_PADDING,
+    PLAY_AREA_MAX_X,
+    X_FRAME_PER_ACCEL,
+    Y_FRAME_PER_ACCEL,
+} from "./constants";
 import { Ball } from "./ball";
 import { calc_collision } from "./collision";
 
@@ -100,7 +110,7 @@ function drop_ball() {
     const first_ball = drop_queue.shift()!;
     const new_ball_type = DROPPABLE_BALL_TYPES[Math.floor(Math.random() * DROPPABLE_BALL_TYPES.length)];
     const new_ball = new Ball(new_ball_type);
-    first_ball.set_acceleration({ x: 0, y: FRAME_PER_ACCEL });
+    first_ball.set_acceleration({ x: X_FRAME_PER_ACCEL, y: Y_FRAME_PER_ACCEL });
     tmp_ball = first_ball;
     drop_queue.push(new_ball);
     balls.push(first_ball);

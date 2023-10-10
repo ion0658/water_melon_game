@@ -1,5 +1,5 @@
 import { Ball } from "./ball";
-import { COEFFICIENT_OF_RESTITUTION, G_ACCEL } from "./constants";
+import { ACCEL_SIZE, COEFFICIENT_OF_RESTITUTION } from "./constants";
 
 export function calc_collision(ball: Ball, other: Ball, canvas_width: number, canvas_height: number): boolean {
     // 2点間の距離を求める
@@ -23,7 +23,7 @@ export function calc_collision(ball: Ball, other: Ball, canvas_width: number, ca
     other.set_point({ x: other.get_point().x - move_distance_x / 2, y: other.get_point().y - move_distance_y / 2 }, canvas_width, canvas_height);
 
     if (ball.is_upgraded()) {
-        const push_velocity = create_horizontal_vector(ball.get_point(), other.get_point(), G_ACCEL);
+        const push_velocity = create_horizontal_vector(ball.get_point(), other.get_point(), ACCEL_SIZE);
         other.set_velocity({ x: other.get_velocity().x + push_velocity.x, y: other.get_velocity().y + push_velocity.y });
     }
 
