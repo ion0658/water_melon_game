@@ -49,15 +49,18 @@ export class Ball {
     }
 
     set_acceleration(acceleration: Vector2) {
-        this._acceleration = acceleration;
+        this._acceleration.x = acceleration.x;
+        this._acceleration.y = acceleration.y;
     }
 
     set_velocity(velocity: Vector2) {
-        this._velocity = velocity;
+        this._velocity.x = velocity.x;
+        this._velocity.y = velocity.y;
     }
 
     set_point(point: Vector2, max_x: number, max_y: number) {
-        this._point = point;
+        this._point.x = point.x;
+        this._point.y = point.y;
         if (this._point.x + this.get_radius() > max_x) {
             this._point.x = max_x - this.get_radius();
         }
