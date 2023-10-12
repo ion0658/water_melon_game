@@ -60,7 +60,7 @@ export function get_next_ball_type(current: BallType): BallType {
         case BallTypes.MELON:
             return BallTypes.WATERMELON;
         case BallTypes.WATERMELON:
+        default:
             return BallTypes.CHERRY;
     }
-    return BallTypes.CHERRY;
 }

@@ -16,8 +16,8 @@ export function calc_collision(ball: Ball, other: Ball, canvas_width: number, ca
 
     // 重なっている場合は、重なっている分だけボールを移動させる
     const move_distance = radius_sum - distance;
-    const move_distance_x = move_distance * (distance_x / distance);
-    const move_distance_y = move_distance * (distance_y / distance);
+    const move_distance_x = distance === 0 ? 0 : move_distance * (distance_x / distance);
+    const move_distance_y = distance === 0 ? 0 : move_distance * (distance_y / distance);
 
     ball.set_point({ x: ball.get_point().x + move_distance_x / 2, y: ball.get_point().y + move_distance_y / 2 }, canvas_width, canvas_height);
     other.set_point({ x: other.get_point().x - move_distance_x / 2, y: other.get_point().y - move_distance_y / 2 }, canvas_width, canvas_height);
@@ -27,6 +27,7 @@ export function calc_collision(ball: Ball, other: Ball, canvas_width: number, ca
         other.set_velocity({ x: other.get_velocity().x + push_velocity.x, y: other.get_velocity().y + push_velocity.y });
         return true;
     }
+
     // 2次元の衝突後の速度を求める
     const { result_velocity1, result_velocity2 } = calc_collision_velocity(ball, other);
     ball.set_velocity(result_velocity1);
@@ -66,7 +67,7 @@ function create_horizontal_vector(pos: Vector2, colPos: Vector2, size: number = 
     let dirVector: Vector2 = { x: colPos.x - pos.x, y: colPos.y - pos.y }; // 方向ベクトル
 
     // 当たった時の軸方向を求める
-    if (dirVector.x == 0 && dirVector.y == 0) {
+    if (dirVector.x === 0 && dirVector.y === 0) {
         return { x: 0, y: 0 };
     }
 
