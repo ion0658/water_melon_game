@@ -8,6 +8,5 @@ export default defineConfig({
             all: true,
         },
         include: ["src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
-        globals: true,
     },
 });

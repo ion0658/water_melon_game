@@ -95,9 +95,6 @@ function create_vertical_vector(vector: Vector2): Vector2 {
         return { x: 0, y: 0 };
     }
 
-    if (vector.y <= 0) {
-        console.log("vector.y <= 0");
-    }
     let verticalVector: Vector2 = { x: 0, y: 0 };
     verticalVector.y = Math.sqrt(1 / ((vector.y / vector.x) * (vector.y / vector.x) + 1));
     verticalVector.x = vector.x === 0 ? (vector.y > 0 ? 1 : -1) : -(vector.y * verticalVector.y) / vector.x;
