@@ -1,4 +1,4 @@
-export const FPS = 500;
+export const FPS = 200;
 export const Y_G_ACCEL = 2;
 export const X_G_ACCEL = 0;
 export const ACCEL_SIZE = Math.sqrt(Y_G_ACCEL * Y_G_ACCEL + X_G_ACCEL * X_G_ACCEL);
