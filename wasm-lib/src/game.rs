@@ -65,14 +65,9 @@ impl Game {
         let new_ball = Ball::new(rng.sample(rand::distributions::Standard));
         second.set_point(&first.get_point(), &PLAY_AREA);
         first.set_point(
-            &Vector2::add(
-                &first.get_point(),
-                &Vector2::new(
-                    ACCEL.x / self.fps as f64,
-                    DROP_AREA_HEIGHT - (first.get_radius() * 2f64)
-                        + (ACCEL.y / self.fps as f64)
-                        + padding,
-                ),
+            &Vector2::new(
+                first.get_point().x + ACCEL.x / self.fps as f64,
+                ACCEL.y / self.fps as f64 + DROP_AREA_HEIGHT - first.get_radius() + padding,
             ),
             &PLAY_AREA,
         );
@@ -144,14 +139,10 @@ impl Game {
                         ball.set_velocity(&v1, *ACCEL_SIZE / self.fps as f64);
                         other.set_velocity(&v2, *ACCEL_SIZE / self.fps as f64);
                         if ball.is_upgraded() {
-                            let add_vel1 = Vector2::multiply(
-                                &d1.create_horizontal_unit_vector(),
-                                *ACCEL_SIZE / self.fps as f64,
-                            );
-                            let add_vel2 = Vector2::multiply(
-                                &d2.create_horizontal_unit_vector(),
-                                *ACCEL_SIZE / self.fps as f64,
-                            );
+                            let add_vel1 =
+                                Vector2::multiply(&d1.create_horizontal_unit_vector(), *ACCEL_SIZE);
+                            let add_vel2 =
+                                Vector2::multiply(&d2.create_horizontal_unit_vector(), *ACCEL_SIZE);
                             ball.set_velocity(
                                 &Vector2::add(&ball.get_velocity(), &add_vel1),
                                 *ACCEL_SIZE / self.fps as f64,
