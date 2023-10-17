@@ -22,15 +22,16 @@ extern "C" {
 pub struct Game {
     fps: u64,
     is_ready_to_drop: bool,
+    score: u64,
     balls: Vec<Ball>,
     drop_queue: [Ball; 2],
 }
 
-#[wasm_bindgen]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TickData {
     balls: Vec<Ball>,
     drop_queue: [Ball; 2],
+    score: u64,
 }
 
 #[wasm_bindgen]
@@ -40,6 +41,7 @@ impl Game {
         Self {
             fps,
             is_ready_to_drop: true,
+            score: 0,
             balls: vec![],
             drop_queue: [
                 Ball::new(rng.sample(rand::distributions::Standard)),
@@ -115,6 +117,7 @@ impl Game {
                     }
                     if ball.is_same_type(&other) {
                         ball.revolute();
+                        self.score += ball.get_score();
                         ball.set_point(
                             &Vector2::get_intermediate_point(
                                 &ball.get_point(),
@@ -150,6 +153,7 @@ impl Game {
         let tick_data = TickData {
             balls: self.balls.clone(),
             drop_queue: self.drop_queue,
+            score: self.score,
         };
         Ok(serde_wasm_bindgen::to_value(&tick_data)?)
     }

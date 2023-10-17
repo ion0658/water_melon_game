@@ -202,10 +202,12 @@ function draw_balls() {
     const tick_data = game.tick();
     const balls = tick_data.balls;
     const drop_queue = tick_data.drop_queue;
+    const tick_score = tick_data.score;
     draw_drop_queue(drop_queue);
     balls.forEach((ball: TickBall) => {
         draw_ball(ball);
     });
+    score = BigInt(tick_score);
 }
 
 function draw() {
