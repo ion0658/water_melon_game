@@ -31,6 +31,14 @@ impl Vector2 {
         Vector2::new(v.x * scale, v.y * scale)
     }
 
+    pub fn get_intermediate_point(v1: &Vector2, v2: &Vector2, ratio: f64) -> Vector2 {
+        Vector2::multiply(&Vector2::add(&v1, &v2), ratio)
+    }
+
+    pub fn get_size(&self) -> f64 {
+        (self.x * self.x + self.y * self.y).sqrt()
+    }
+
     pub fn create_vertical_unit_vector(&self) -> Vector2 {
         if self.x == 0.0 && self.y == 0.0 {
             Vector2::new(0.0, 0.0)

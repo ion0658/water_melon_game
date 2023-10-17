@@ -181,7 +181,7 @@ function draw_ball(ball: TickBall) {
 function set_drop_range(ball: TickBall) {
     const play_area = get_play_area();
     range_input_elm.min = String(get_radius(ball.ball_type));
-    range_input_elm.max = String(play_area.y - get_radius(ball.ball_type));
+    range_input_elm.max = String(play_area.x - get_radius(ball.ball_type));
 }
 
 function draw_drop_queue(queues: TickBall[]) {

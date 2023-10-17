@@ -19,7 +19,6 @@ pub struct Ball {
     velocity: Vector2,
     acceleration: Vector2,
     ball_type: BallType,
-    is_upgraded: bool,
 }
 
 #[wasm_bindgen]
@@ -30,7 +29,6 @@ impl Ball {
             velocity: Vector2::new(0.0, 0.0),
             acceleration: Vector2::new(0.0, 0.0),
             ball_type,
-            is_upgraded: false,
         };
         me.set_point(&me.get_point(), &PLAY_AREA);
         me
@@ -95,11 +93,6 @@ impl Ball {
 
     pub fn revolute(&mut self) {
         self.ball_type = self.ball_type.get_next_type();
-        self.is_upgraded = true;
-    }
-
-    pub fn is_upgraded(&self) -> bool {
-        self.is_upgraded
     }
 
     pub fn is_same_type(&self, ball: &Ball) -> bool {
@@ -107,7 +100,6 @@ impl Ball {
     }
 
     pub fn next(&mut self, max: &Vector2, v_min: f64) {
-        self.is_upgraded = false;
         let new_point = Vector2::add(&self.get_point(), &self.get_velocity());
         if new_point.x < self.get_radius() || new_point.x > max.x - self.get_radius() {
             self.set_velocity(
