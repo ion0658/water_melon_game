@@ -21,6 +21,11 @@ impl Vector2 {
         Vector2::new(v1.x - v2.x, v1.y - v2.y)
     }
 
+    pub fn rotate(v: &Vector2, angle_rad: f64) -> Vector2 {
+        let (sin, cos) = angle_rad.sin_cos();
+        Vector2::new(v.x * cos - v.y * sin, v.x * sin + v.y * cos)
+    }
+
     pub fn inner_product(v1: &Vector2, v2: &Vector2) -> f64 {
         v1.x * v2.x + v1.y * v2.y
     }
@@ -77,6 +82,19 @@ mod tests {
     }
 
     #[test]
+    fn vector_rotate() {
+        let v1 = Vector2::new(1.0, 0.0);
+        let v2 = Vector2::rotate(&v1, std::f64::consts::PI / 2.0);
+        assert!(v2.x < 1.0e-10);
+        assert!((v2.y - 1.0).abs() < 1.0e-10);
+
+        let v1 = Vector2::new(1.0, 1.0);
+        let v2 = Vector2::rotate(&v1, std::f64::consts::PI / 2.0);
+        assert!((v2.x - -1.0).abs() < 1.0e-10);
+        assert!((v2.y - 1.0).abs() < 1.0e-10);
+    }
+
+    #[test]
     fn vector_inner_product() {
         let v1 = Vector2::new(1.0, 2.0);
         let v2 = Vector2::new(3.0, 4.0);
@@ -112,18 +130,16 @@ mod tests {
     fn vector_create_vertical_unit_vector() {
         let v1 = Vector2::new(3.0, 4.0);
         let v2 = v1.create_vertical_unit_vector();
-        let v3 = Vector2::multiply(&v1, 1.0 / v1.get_size());
-        assert_eq!(v2.x, -v3.y);
-        assert_eq!(v2.y, v3.x);
+        assert!((v2.x - -0.8).abs() < 1.0e-10);
+        assert!((v2.y - 0.6).abs() < 1.0e-10);
     }
 
     #[test]
     fn vector_create_horizontal_unit_vector() {
         let v1 = Vector2::new(3.0, 4.0);
         let v2 = v1.create_horizontal_unit_vector();
-        let v3 = Vector2::multiply(&v1, 1.0 / v1.get_size());
-        assert_eq!(v2.x, v3.x);
-        assert_eq!(v2.y, v3.y);
+        assert!((v2.x - 0.6).abs() < 1.0e-10);
+        assert!((v2.y - 0.8).abs() < 1.0e-10);
     }
 
     #[test]
