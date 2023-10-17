@@ -7,8 +7,7 @@
         "dev": "wasm-pack build ./wasm-lib --target web && vite",
         "build": "wasm-pack build ./wasm-lib --target web && tsc && vite build",
         "preview": "vite preview",
-        "test": "vitest",
-        "coverage": "vitest run --coverage"
+        "test": "wasm-pack test --headless --firefox ./wasm-lib"
     },
     "devDependencies": {
         "@vitest/coverage-v8": "^0.34.6",
