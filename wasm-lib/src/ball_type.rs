@@ -67,12 +67,12 @@ impl BallType {
             BallType::GRAPE => 1f64,
             BallType::ORANGE => 1f64,
             BallType::PERSIMMON => 1f64,
-            BallType::APPLE => 1f64,
-            BallType::PEAR => 1f64,
-            BallType::PEACH => 1f64,
-            BallType::PINEAPPLE => 1f64,
-            BallType::MELON => 1f64,
-            BallType::WATERMELON => 1f64,
+            BallType::APPLE => 2f64,
+            BallType::PEAR => 2f64,
+            BallType::PEACH => 2f64,
+            BallType::PINEAPPLE => 2f64,
+            BallType::MELON => 2f64,
+            BallType::WATERMELON => 2f64,
         }
     }
 

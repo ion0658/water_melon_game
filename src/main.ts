@@ -1,11 +1,5 @@
 import "./style.css";
-import {
-    FRAME_TIME_MSEC,
-    //     DROPPABLE_LARGEST_BALL,
-    //     DROP_AREA_HEIGHT,
-    PLAY_AREA_PADDING,
-    FPS,
-} from "./constants";
+import { FRAME_TIME_MSEC, PLAY_AREA_PADDING, FPS } from "./constants";
 import init, {
     reset as game_reset,
     Game,
@@ -22,12 +16,12 @@ const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 const score_elm = document.getElementById("current_score") as HTMLOutputElement;
 const range_input_elm = document.getElementById("drop_point") as HTMLInputElement;
 
-let score: bigint = BigInt(0);
+let score: number = 0;
 
 let game: Game;
 
 // save best 3 score to local storage
-function save_score(score: bigint) {
+function save_score(score: number) {
     const scores = JSON.parse(localStorage.getItem("scores") || "[]");
     scores.push(score);
     scores.sort((a: number, b: number) => b - a);
@@ -207,7 +201,7 @@ function draw_balls() {
     balls.forEach((ball: TickBall) => {
         draw_ball(ball);
     });
-    score = BigInt(tick_score);
+    score = tick_score;
 }
 
 function draw() {

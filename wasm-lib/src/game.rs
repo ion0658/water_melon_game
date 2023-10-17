@@ -58,6 +58,7 @@ impl Game {
         if !self.is_droppable() {
             return;
         }
+        self.is_ready_to_drop = false;
         let mut rng = rand::thread_rng();
         let mut first = self.drop_queue[0];
         let mut second = self.drop_queue[1];
@@ -80,7 +81,6 @@ impl Game {
         self.balls.push(first);
         self.drop_queue[0] = second;
         self.drop_queue[1] = new_ball;
-        self.is_ready_to_drop = false;
     }
 
     pub fn set_drop_x(&mut self, x: f64) {
@@ -103,7 +103,7 @@ impl Game {
 
             if !self.is_droppable()
                 && i == self.balls.len() - 1
-                && ball.get_point().y - ball.get_radius() > DROP_AREA_HEIGHT
+                && ball.get_point().y - ball.get_radius() > DROP_AREA_HEIGHT + 10.0
             {
                 self.is_ready_to_drop = true;
             }
@@ -135,6 +135,7 @@ impl Game {
                             *ACCEL_SIZE / self.fps as f64,
                         );
                         self.balls.remove(j);
+                        j = i;
                     } else {
                         let (d1, d2) = calc_collision_move_distance(&ball, &other);
                         let (v1, v2) = calc_collision_velocity(&ball, &other);
@@ -142,6 +143,25 @@ impl Game {
                         other.set_point(&Vector2::add(&other.get_point(), &d2), &PLAY_AREA);
                         ball.set_velocity(&v1, *ACCEL_SIZE / self.fps as f64);
                         other.set_velocity(&v2, *ACCEL_SIZE / self.fps as f64);
+                        if ball.is_upgraded() {
+                            let add_vel1 = Vector2::multiply(
+                                &d1.create_horizontal_unit_vector(),
+                                *ACCEL_SIZE / self.fps as f64,
+                            );
+                            let add_vel2 = Vector2::multiply(
+                                &d2.create_horizontal_unit_vector(),
+                                *ACCEL_SIZE / self.fps as f64,
+                            );
+                            ball.set_velocity(
+                                &Vector2::add(&ball.get_velocity(), &add_vel1),
+                                *ACCEL_SIZE / self.fps as f64,
+                            );
+                            other.set_velocity(
+                                &Vector2::add(&other.get_velocity(), &add_vel2),
+                                *ACCEL_SIZE / self.fps as f64,
+                            );
+                        }
+
                         self.balls[j] = other;
                     }
                 }
