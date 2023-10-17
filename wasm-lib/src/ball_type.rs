@@ -144,3 +144,29 @@ impl Distribution<BallType> for Standard {
         }
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn from_str() {
+        assert_eq!(BallType::from("CHERRY"), BallType::CHERRY);
+        assert_eq!(BallType::from("STRAWBERRY"), BallType::STRAWBERRY);
+        assert_eq!(BallType::from("GRAPE"), BallType::GRAPE);
+        assert_eq!(BallType::from("ORANGE"), BallType::ORANGE);
+        assert_eq!(BallType::from("PERSIMMON"), BallType::PERSIMMON);
+        assert_eq!(BallType::from("APPLE"), BallType::APPLE);
+        assert_eq!(BallType::from("PEAR"), BallType::PEAR);
+        assert_eq!(BallType::from("PEACH"), BallType::PEACH);
+        assert_eq!(BallType::from("PINEAPPLE"), BallType::PINEAPPLE);
+        assert_eq!(BallType::from("MELON"), BallType::MELON);
+        assert_eq!(BallType::from("WATERMELON"), BallType::WATERMELON);
+    }
+
+    #[test]
+    #[should_panic]
+    fn from_str_panic() {
+        let _ = BallType::from("INVALID");
+    }
+}

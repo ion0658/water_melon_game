@@ -45,20 +45,22 @@ function draw_high_scores(scores: number[]) {
 }
 
 function reset() {
+    if (game) {
+        game.free();
+    }
     game = game_reset(BigInt(FPS));
     draw_high_scores(load_score());
 }
 
 function main_loop() {
-    clear_canvas();
-    draw();
-
+    setTimeout(main_loop, FRAME_TIME_MSEC);
     if (game.is_game_over()) {
         alert(`Game Over! Your score is ${score}!`);
         save_score(score);
         reset();
     }
-    setTimeout(main_loop, FRAME_TIME_MSEC);
+    clear_canvas();
+    draw();
 }
 
 document.addEventListener("DOMContentLoaded", async () => {

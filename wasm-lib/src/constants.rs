@@ -16,7 +16,7 @@ const LARGEST_BALL_RADIUS: f64 = BallType::get_largest_type().get_radius();
 pub const LARGEST_DROPPABLE_BALL_RADIUS: f64 = BallType::get_droppable_last_type().get_radius();
 
 pub const DROP_AREA_HEIGHT: f64 = LARGEST_DROPPABLE_BALL_RADIUS * 2f64;
-const BOX_AREA_WIDTH: f64 = LARGEST_BALL_RADIUS * 4f64;
+const BOX_AREA_WIDTH: f64 = LARGEST_BALL_RADIUS * 3f64;
 pub const BOX_AREA_HEIGHT: f64 = LARGEST_BALL_RADIUS * 4f64;
 pub const PLAY_AREA: Vector2 = Vector2 {
     x: BOX_AREA_WIDTH,

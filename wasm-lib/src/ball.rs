@@ -145,3 +145,77 @@ pub fn get_score(ball_type: &str) -> u64 {
     let ball_type = BallType::from(ball_type);
     ball_type.get_score()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn set_point() {
+        let mut ball = Ball::new(BallType::CHERRY);
+        let point = Vector2::new(10.0, 10.0);
+        let max = Vector2::new(100.0, 100.0);
+        ball.set_point(&point, &max);
+        assert_eq!(ball.get_point(), point);
+        let point = Vector2::new(0.0, 0.0);
+        ball.set_point(&point, &max);
+        assert_eq!(
+            ball.get_point(),
+            Vector2::new(ball.get_radius(), ball.get_radius())
+        );
+        let point = Vector2::new(100.0, 100.0);
+        ball.set_point(&point, &max);
+        assert_eq!(
+            ball.get_point(),
+            Vector2::new(max.x - ball.get_radius(), max.y - ball.get_radius())
+        );
+    }
+
+    #[test]
+    fn set_velocity() {
+        let mut ball = Ball::new(BallType::CHERRY);
+        let velocity = Vector2::new(10.0, 10.0);
+        let min = 1.0;
+        ball.set_velocity(&velocity, min);
+        assert_eq!(ball.get_velocity(), velocity);
+        let velocity = Vector2::new(min - 0.1, min - 0.1);
+        ball.set_velocity(&velocity, min);
+        assert_eq!(ball.get_velocity(), Vector2::new(0.0, 0.0));
+    }
+
+    #[test]
+    fn set_acceleration() {
+        let mut ball = Ball::new(BallType::CHERRY);
+        let acceleration = Vector2::new(10.0, 10.0);
+        ball.set_acceleration(&acceleration);
+        assert_eq!(ball.get_acceleration(), acceleration);
+    }
+
+    #[test]
+    fn revolute() {
+        let mut ball = Ball::new(BallType::CHERRY);
+        assert!(ball.is_same_type(&Ball::new(BallType::CHERRY)));
+        ball.revolute();
+        assert!(ball.is_same_type(&Ball::new(BallType::STRAWBERRY)));
+        ball.revolute();
+        assert!(ball.is_same_type(&Ball::new(BallType::GRAPE)));
+        ball.revolute();
+        assert!(ball.is_same_type(&Ball::new(BallType::ORANGE)));
+        ball.revolute();
+        assert!(ball.is_same_type(&Ball::new(BallType::PERSIMMON)));
+        ball.revolute();
+        assert!(ball.is_same_type(&Ball::new(BallType::APPLE)));
+        ball.revolute();
+        assert!(ball.is_same_type(&Ball::new(BallType::PEAR)));
+        ball.revolute();
+        assert!(ball.is_same_type(&Ball::new(BallType::PEACH)));
+        ball.revolute();
+        assert!(ball.is_same_type(&Ball::new(BallType::PINEAPPLE)));
+        ball.revolute();
+        assert!(ball.is_same_type(&Ball::new(BallType::MELON)));
+        ball.revolute();
+        assert!(ball.is_same_type(&Ball::new(BallType::WATERMELON)));
+        ball.revolute();
+        assert!(ball.is_same_type(&Ball::new(BallType::CHERRY)));
+    }
+}
