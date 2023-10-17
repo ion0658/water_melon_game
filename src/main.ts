@@ -172,12 +172,21 @@ function draw_ball(ball: TickBall) {
         2 * Math.PI
     );
     ctx.fill();
+    ctx.beginPath();
+    ctx.fillStyle = "#FFFFFF";
+    ctx.moveTo(ball.point.x + PLAY_AREA_PADDING, ball.point.y + PLAY_AREA_PADDING);
+    ctx.lineTo(
+        ball.point.x + PLAY_AREA_PADDING + ball.center_line.x,
+        ball.point.y + PLAY_AREA_PADDING + ball.center_line.y
+    );
+    ctx.stroke();
 }
 
 function set_drop_range(ball: TickBall) {
     const play_area = get_play_area();
     range_input_elm.min = String(get_radius(ball.ball_type));
     range_input_elm.max = String(play_area.x - get_radius(ball.ball_type));
+    range_input_elm.value = String(ball.point.x);
 }
 
 function draw_drop_queue(queues: TickBall[]) {

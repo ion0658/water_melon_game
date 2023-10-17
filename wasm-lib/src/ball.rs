@@ -11,6 +11,7 @@ pub struct Ball {
     point: Vector2,
     velocity: Vector2,
     acceleration: Vector2,
+    center_line: Vector2,
     ball_type: BallType,
     upgraded: bool,
 }
@@ -22,6 +23,7 @@ impl Ball {
             velocity: Vector2::new(0.0, 0.0),
             acceleration: Vector2::new(0.0, 0.0),
             ball_type,
+            center_line: Vector2::new(0.0, -ball_type.get_radius()),
             upgraded: false,
         };
         me.set_point(&me.get_point(), &PLAY_AREA);
@@ -124,6 +126,13 @@ impl Ball {
         self.set_velocity(
             &Vector2::add(&self.get_velocity(), &self.get_acceleration()),
             v_min,
+        );
+        self.center_line = Vector2::multiply(
+            &Vector2::rotate(
+                &self.center_line.create_horizontal_unit_vector(),
+                self.get_velocity().x / (std::f64::consts::PI * 2.0 * self.get_radius()) * 10.0,
+            ),
+            self.get_radius(),
         );
     }
 }

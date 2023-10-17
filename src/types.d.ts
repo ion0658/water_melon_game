@@ -7,5 +7,6 @@ interface Vector2 {
 
 interface TickBall {
     point: Vector2;
+    center_line: Vector2;
     ball_type: string;
 }
