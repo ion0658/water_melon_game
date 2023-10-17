@@ -124,17 +124,10 @@ impl From<&str> for BallType {
             "MELON" => BallType::MELON,
             "WATERMELON" => BallType::WATERMELON,
             _ => {
-                log("Invalid ball type");
                 unreachable!();
             }
         }
     }
-}
-
-#[wasm_bindgen]
-extern "C" {
-    #[wasm_bindgen(js_namespace = console)]
-    fn log(s: &str);
 }
 
 impl Distribution<BallType> for Standard {
@@ -146,7 +139,6 @@ impl Distribution<BallType> for Standard {
             3 => BallType::ORANGE,
             4 => BallType::PERSIMMON,
             _ => {
-                log("Invalid random number");
                 unreachable!();
             }
         }

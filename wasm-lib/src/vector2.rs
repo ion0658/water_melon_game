@@ -3,13 +3,11 @@ use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 #[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
-#[repr(C)]
 pub struct Vector2 {
     pub x: f64,
     pub y: f64,
 }
 
-#[wasm_bindgen]
 impl Vector2 {
     pub fn new(x: f64, y: f64) -> Vector2 {
         Vector2 { x, y }
