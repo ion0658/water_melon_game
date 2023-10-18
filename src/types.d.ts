@@ -10,3 +10,9 @@ interface TickBall {
     center_line: Vector2;
     ball_type: string;
 }
+
+interface TickGame {
+    balls: TickBall[];
+    drop_queue: TickBall[];
+    score: number;
+}

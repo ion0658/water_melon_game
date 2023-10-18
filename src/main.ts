@@ -1,5 +1,5 @@
 import "./style.css";
-import { PLAY_AREA_PADDING, FPS } from "./constants";
+import { PLAY_AREA_PADDING, FPS, FRAME_TIME_MSEC } from "./constants";
 import init, {
     reset as game_reset,
     Game,
@@ -9,7 +9,7 @@ import init, {
     get_droppable_large_ball_radius,
     get_drop_area_height,
 } from "../wasm-lib/pkg";
-import { TickBall } from "./types";
+import { TickBall, TickGame } from "./types";
 import * as PIXI from "pixi.js";
 
 const score_elm = document.getElementById("current_score") as HTMLOutputElement;
@@ -18,6 +18,7 @@ const range_input_elm = document.getElementById("drop_point") as HTMLInputElemen
 let score: number = 0;
 
 let game: Game;
+let tick_data: TickGame;
 
 // save best 3 score to local storage
 function save_score(score: number) {
@@ -51,13 +52,18 @@ function reset() {
     draw_high_scores(load_score());
 }
 
-function main_loop(ctx: PIXI.Application) {
-    window.requestAnimationFrame(() => main_loop(ctx));
+function game_loop() {
+    setTimeout(game_loop, FRAME_TIME_MSEC);
     if (game.is_game_over()) {
         alert(`Game Over! Your score is ${score}!`);
         save_score(score);
         reset();
     }
+    tick_data = game.tick();
+}
+
+function draw_loop(ctx: PIXI.Application) {
+    window.requestAnimationFrame(() => draw_loop(ctx));
     clear_canvas(ctx);
     draw(ctx);
 }
@@ -74,7 +80,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     document.getElementById("game_area")?.appendChild(ctx.view as HTMLCanvasElement);
     reset();
-    main_loop(ctx);
+    //main_loop(ctx);
+    game_loop();
+    draw_loop(ctx);
 });
 
 document.addEventListener("keydown", (e) => {
@@ -209,10 +217,10 @@ function draw_drop_queue(ctx: PIXI.Application, queues: TickBall[]) {
 }
 
 function draw_balls(ctx: PIXI.Application) {
-    const tick_data = game.tick();
-    const balls = tick_data.balls;
-    const drop_queue = tick_data.drop_queue;
-    const tick_score = tick_data.score;
+    const tmp = tick_data; //game.tick();
+    const balls = tmp.balls;
+    const drop_queue = tmp.drop_queue;
+    const tick_score = tmp.score;
     draw_drop_queue(ctx, drop_queue);
     balls.forEach((ball: TickBall) => {
         draw_ball(ctx, ball);
