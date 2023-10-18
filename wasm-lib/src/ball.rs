@@ -1,5 +1,6 @@
 use crate::{
     ball_type::BallType,
+    color_code::ColorCode,
     constants::{PLAY_AREA, WALL_COEFFICIENT_OF_RESTITUTION},
     vector2::Vector2,
 };
@@ -75,8 +76,8 @@ impl Ball {
         self.ball_type.get_radius()
     }
 
-    pub fn get_color(&self) -> String {
-        self.ball_type.get_color().into()
+    pub fn get_color(&self) -> ColorCode {
+        self.ball_type.get_color()
     }
 
     pub fn get_mass(&self) -> f64 {
@@ -144,9 +145,9 @@ pub fn get_radius(ball_type: &str) -> f64 {
 }
 
 #[wasm_bindgen]
-pub fn get_color(ball_type: &str) -> String {
+pub fn get_color(ball_type: &str) -> ColorCode {
     let ball_type = BallType::from(ball_type);
-    ball_type.get_color().into()
+    ball_type.get_color()
 }
 
 #[wasm_bindgen]

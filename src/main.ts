@@ -10,9 +10,8 @@ import init, {
     get_drop_area_height,
 } from "../wasm-lib/pkg";
 import { TickBall } from "./types";
+import * as PIXI from "pixi.js";
 
-const canvas = document.getElementById("main_canvas") as HTMLCanvasElement;
-const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 const score_elm = document.getElementById("current_score") as HTMLOutputElement;
 const range_input_elm = document.getElementById("drop_point") as HTMLInputElement;
 
@@ -52,25 +51,30 @@ function reset() {
     draw_high_scores(load_score());
 }
 
-function main_loop() {
-    window.requestAnimationFrame(main_loop);
+function main_loop(ctx: PIXI.Application) {
+    window.requestAnimationFrame(() => main_loop(ctx));
     if (game.is_game_over()) {
         alert(`Game Over! Your score is ${score}!`);
         save_score(score);
         reset();
     }
-    clear_canvas();
-    draw();
+    clear_canvas(ctx);
+    draw(ctx);
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
     await init();
     const play_area = get_play_area();
     const droppable_largest_radius = get_droppable_large_ball_radius();
-    canvas.width = play_area.x + droppable_largest_radius * 2 + PLAY_AREA_PADDING * 5;
-    canvas.height = play_area.y + PLAY_AREA_PADDING * 2;
+    const ctx = new PIXI.Application({
+        antialias: true,
+        backgroundColor: 0xeeeeee,
+        width: play_area.x + droppable_largest_radius * 2 + PLAY_AREA_PADDING * 5,
+        height: play_area.y + PLAY_AREA_PADDING * 2,
+    });
+    document.getElementById("game_area")?.appendChild(ctx.view as HTMLCanvasElement);
     reset();
-    main_loop();
+    main_loop(ctx);
 });
 
 document.addEventListener("keydown", (e) => {
@@ -91,7 +95,6 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-//document.getElementById("drop_button")?.addEventListener("click", drop_ball);
 document.getElementById("drop_button")?.addEventListener("click", () => {
     game.drop(PLAY_AREA_PADDING);
 });
@@ -103,83 +106,85 @@ document.getElementById("drop_point")?.addEventListener("input", (e) => {
     game.set_drop_x(x);
 });
 
-function clear_canvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+function clear_canvas(ctx: PIXI.Application) {
+    ctx.stage.removeChildren();
 }
 
-function draw_border() {
+function draw_border(ctx: PIXI.Application) {
     const play_area = get_play_area();
     const drop_area_height = get_drop_area_height();
     const droppable_largest_radius = get_droppable_large_ball_radius();
-    // play area
-    ctx.beginPath();
-    ctx.strokeStyle = "#222222";
-    ctx.moveTo(PLAY_AREA_PADDING, PLAY_AREA_PADDING + drop_area_height);
-    ctx.lineTo(PLAY_AREA_PADDING, play_area.y + PLAY_AREA_PADDING);
-    ctx.lineTo(play_area.x + PLAY_AREA_PADDING, play_area.y + PLAY_AREA_PADDING);
-    ctx.lineTo(play_area.x + PLAY_AREA_PADDING, PLAY_AREA_PADDING + drop_area_height);
-    ctx.stroke();
+    const graphics = new PIXI.Graphics();
 
-    // next ball area
-    ctx.beginPath();
-    ctx.strokeStyle = "#7E7E7E";
-    ctx.moveTo(play_area.x + PLAY_AREA_PADDING * 2, PLAY_AREA_PADDING);
-    ctx.lineTo(
+    graphics.lineStyle(1, 0x222222, 1);
+    graphics.moveTo(PLAY_AREA_PADDING, PLAY_AREA_PADDING + drop_area_height);
+    graphics.lineTo(PLAY_AREA_PADDING, play_area.y + PLAY_AREA_PADDING);
+    graphics.lineTo(play_area.x + PLAY_AREA_PADDING, play_area.y + PLAY_AREA_PADDING);
+    graphics.lineTo(play_area.x + PLAY_AREA_PADDING, PLAY_AREA_PADDING + drop_area_height);
+    graphics.endFill();
+
+    graphics.lineStyle(1, 0x7e7e7e);
+    graphics.moveTo(play_area.x + PLAY_AREA_PADDING * 2, PLAY_AREA_PADDING);
+    graphics.lineTo(
         play_area.x + PLAY_AREA_PADDING * 2,
         PLAY_AREA_PADDING * 3 + droppable_largest_radius * 2
     );
-    ctx.lineTo(
+    graphics.lineTo(
         play_area.x + PLAY_AREA_PADDING * 4 + droppable_largest_radius * 2,
         PLAY_AREA_PADDING * 3 + droppable_largest_radius * 2
     );
-    ctx.lineTo(
+    graphics.lineTo(
         play_area.x + PLAY_AREA_PADDING * 4 + droppable_largest_radius * 2,
         PLAY_AREA_PADDING
     );
-    ctx.closePath();
-    ctx.stroke();
-    ctx.beginPath();
+    graphics.closePath();
+    graphics.endFill();
 
-    ctx.fillStyle = "#7E7E7E";
-    ctx.fillText(
-        "NEXT",
-        play_area.x + PLAY_AREA_PADDING * 7 + droppable_largest_radius,
-        PLAY_AREA_PADDING * 5 + droppable_largest_radius * 2
-    );
+    const text = new PIXI.Text("NEXT", {
+        fontFamily: "Arial",
+        fontSize: 10,
+        fontWeight: "lighter",
+        align: "center",
+        fontStyle: "normal",
+        fill: 0x7e7e7e,
+    });
+    text.x = play_area.x + PLAY_AREA_PADDING * 6 + droppable_largest_radius;
+    text.y = PLAY_AREA_PADDING * 4 + droppable_largest_radius * 2;
+
+    ctx.stage.addChild(graphics);
+    ctx.stage.addChild(text);
 }
 
-function draw_drop_line(ball: TickBall) {
+function draw_drop_line(ctx: PIXI.Application, ball: TickBall) {
     const play_area = get_play_area();
-
-    ctx.beginPath();
-    ctx.strokeStyle = "#7E7E7E";
-    ctx.moveTo(
+    const graphics = new PIXI.Graphics();
+    graphics.lineStyle(1, 0x7e7e7e);
+    graphics.moveTo(
         ball.point.x + PLAY_AREA_PADDING,
         ball.point.y + get_radius(ball.ball_type) + PLAY_AREA_PADDING
     );
-    ctx.lineTo(ball.point.x + PLAY_AREA_PADDING, play_area.y + PLAY_AREA_PADDING);
-    ctx.stroke();
+    graphics.lineTo(ball.point.x + PLAY_AREA_PADDING, play_area.y + PLAY_AREA_PADDING);
+    graphics.endFill();
+    ctx.stage.addChild(graphics);
 }
 
-function draw_ball(ball: TickBall) {
-    ctx.beginPath();
-    ctx.fillStyle = get_color(ball.ball_type);
-    ctx.arc(
+function draw_ball(ctx: PIXI.Application, ball: TickBall) {
+    const graphics = new PIXI.Graphics();
+    graphics.beginFill(get_color(ball.ball_type).to_rgb_u32());
+    graphics.drawCircle(
         ball.point.x + PLAY_AREA_PADDING,
         ball.point.y + PLAY_AREA_PADDING,
-        get_radius(ball.ball_type),
-        0,
-        2 * Math.PI
+        get_radius(ball.ball_type)
     );
-    ctx.fill();
-    ctx.beginPath();
-    ctx.fillStyle = "#FFFFFF";
-    ctx.moveTo(ball.point.x + PLAY_AREA_PADDING, ball.point.y + PLAY_AREA_PADDING);
-    ctx.lineTo(
+    graphics.endFill();
+    graphics.lineStyle(1, 0x000000);
+    graphics.moveTo(ball.point.x + PLAY_AREA_PADDING, ball.point.y + PLAY_AREA_PADDING);
+    graphics.lineTo(
         ball.point.x + PLAY_AREA_PADDING + ball.center_line.x,
         ball.point.y + PLAY_AREA_PADDING + ball.center_line.y
     );
-    ctx.stroke();
+    graphics.endFill();
+    ctx.stage.addChild(graphics);
 }
 
 function set_drop_range(ball: TickBall) {
@@ -189,35 +194,35 @@ function set_drop_range(ball: TickBall) {
     range_input_elm.value = String(ball.point.x);
 }
 
-function draw_drop_queue(queues: TickBall[]) {
+function draw_drop_queue(ctx: PIXI.Application, queues: TickBall[]) {
     const play_area = get_play_area();
     const droppable_largest_radius = get_droppable_large_ball_radius();
     const first_ball = queues[0];
     set_drop_range(first_ball);
-    draw_drop_line(first_ball);
-    draw_ball(first_ball);
+    draw_drop_line(ctx, first_ball);
+    draw_ball(ctx, first_ball);
 
     const second_ball = queues[1];
     second_ball.point.x = PLAY_AREA_PADDING * 2 + play_area.x + droppable_largest_radius;
     second_ball.point.y = PLAY_AREA_PADDING * 1 + droppable_largest_radius;
-    draw_ball(second_ball);
+    draw_ball(ctx, second_ball);
 }
 
-function draw_balls() {
+function draw_balls(ctx: PIXI.Application) {
     const tick_data = game.tick();
     const balls = tick_data.balls;
     const drop_queue = tick_data.drop_queue;
     const tick_score = tick_data.score;
-    draw_drop_queue(drop_queue);
+    draw_drop_queue(ctx, drop_queue);
     balls.forEach((ball: TickBall) => {
-        draw_ball(ball);
+        draw_ball(ctx, ball);
     });
     score = tick_score;
 }
 
-function draw() {
-    draw_balls();
-    draw_border();
+function draw(ctx: PIXI.Application) {
+    draw_balls(ctx);
+    draw_border(ctx);
 
     score_elm.textContent = String(score);
 }

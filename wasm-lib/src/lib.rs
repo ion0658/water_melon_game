@@ -1,6 +1,7 @@
 pub mod ball;
 pub mod ball_type;
 mod collision;
+mod color_code;
 mod constants;
 pub mod game;
 mod utils;
