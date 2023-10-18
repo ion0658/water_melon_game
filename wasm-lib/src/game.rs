@@ -19,6 +19,7 @@ pub struct Game {
     score: u64,
     balls: Vec<Ball>,
     drop_queue: [Ball; 2],
+    rng: ThreadRng,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -41,6 +42,7 @@ impl Game {
                 Ball::new(rng.sample(rand::distributions::Standard)),
                 Ball::new(rng.sample(rand::distributions::Standard)),
             ],
+            rng,
         }
     }
 
@@ -53,10 +55,9 @@ impl Game {
             return;
         }
         self.is_ready_to_drop = false;
-        let mut rng = rand::thread_rng();
         let mut first = self.drop_queue[0];
         let mut second = self.drop_queue[1];
-        let new_ball = Ball::new(rng.sample(rand::distributions::Standard));
+        let new_ball = Ball::new(self.rng.sample(rand::distributions::Standard));
         second.set_point(&first.get_point(), &PLAY_AREA);
         first.set_point(
             &Vector2::new(

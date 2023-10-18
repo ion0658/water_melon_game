@@ -23,7 +23,7 @@ impl Ball {
             velocity: Vector2::new(0.0, 0.0),
             acceleration: Vector2::new(0.0, 0.0),
             ball_type,
-            center_line: Vector2::new(0.0, -ball_type.get_radius()),
+            center_line: Vector2::new(ball_type.get_radius(), 0.0),
             upgraded: false,
         };
         me.set_point(&me.get_point(), &PLAY_AREA);
