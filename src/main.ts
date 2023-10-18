@@ -1,5 +1,5 @@
 import "./style.css";
-import { FRAME_TIME_MSEC, PLAY_AREA_PADDING, FPS } from "./constants";
+import { PLAY_AREA_PADDING, FPS } from "./constants";
 import init, {
     reset as game_reset,
     Game,
@@ -53,7 +53,7 @@ function reset() {
 }
 
 function main_loop() {
-    setTimeout(main_loop, FRAME_TIME_MSEC);
+    window.requestAnimationFrame(main_loop);
     if (game.is_game_over()) {
         alert(`Game Over! Your score is ${score}!`);
         save_score(score);
