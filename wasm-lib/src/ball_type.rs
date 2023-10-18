@@ -2,6 +2,8 @@ use rand::{distributions::Standard, prelude::Distribution};
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
+use crate::color_code::ColorCode;
+
 #[wasm_bindgen]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(i32)]
@@ -44,19 +46,19 @@ impl BallType {
         }
     }
 
-    pub const fn get_color(&self) -> &str {
+    pub fn get_color(&self) -> ColorCode {
         match self {
-            BallType::CHERRY => "#FF0000",
-            BallType::STRAWBERRY => "#FF00FF",
-            BallType::GRAPE => "#7E00FF",
-            BallType::ORANGE => "#FF9E00",
-            BallType::PERSIMMON => "#FF7E00",
-            BallType::APPLE => "#7E0000",
-            BallType::PEAR => "#7E7E00",
-            BallType::PEACH => "#FF7EFF",
-            BallType::PINEAPPLE => "#FFFF00",
-            BallType::MELON => "#7EFF00",
-            BallType::WATERMELON => "#00FF00",
+            BallType::CHERRY => ColorCode::new(0xFF, 0x00, 0x00, 0xFF),
+            BallType::STRAWBERRY => ColorCode::new(0xFF, 0x00, 0xFF, 0xFF),
+            BallType::GRAPE => ColorCode::new(0x7E, 0x00, 0xFF, 0xFF),
+            BallType::ORANGE => ColorCode::new(0xFF, 0x9E, 0x00, 0xFF),
+            BallType::PERSIMMON => ColorCode::new(0xFF, 0x7E, 0x00, 0xFF),
+            BallType::APPLE => ColorCode::new(0x7E, 0x00, 0x00, 0xFF),
+            BallType::PEAR => ColorCode::new(0x7E, 0x7E, 0x00, 0xFF),
+            BallType::PEACH => ColorCode::new(0xFF, 0x7E, 0xFF, 0xFF),
+            BallType::PINEAPPLE => ColorCode::new(0xFF, 0xFF, 0x00, 0xFF),
+            BallType::MELON => ColorCode::new(0x7E, 0xFF, 0x00, 0xFF),
+            BallType::WATERMELON => ColorCode::new(0x00, 0xFF, 0x00, 0xFF),
         }
     }
 

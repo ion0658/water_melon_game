@@ -163,7 +163,7 @@ function draw_drop_line(ball: TickBall) {
 
 function draw_ball(ball: TickBall) {
     ctx.beginPath();
-    ctx.fillStyle = get_color(ball.ball_type);
+    ctx.fillStyle = `#${get_color(ball.ball_type).to_rgba_hex_string()}`;
     ctx.arc(
         ball.point.x + PLAY_AREA_PADDING,
         ball.point.y + PLAY_AREA_PADDING,
@@ -172,6 +172,7 @@ function draw_ball(ball: TickBall) {
         2 * Math.PI
     );
     ctx.fill();
+
     ctx.beginPath();
     ctx.fillStyle = "#FFFFFF";
     ctx.moveTo(ball.point.x + PLAY_AREA_PADDING, ball.point.y + PLAY_AREA_PADDING);
