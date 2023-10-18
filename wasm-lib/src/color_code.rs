@@ -22,6 +22,10 @@ impl ColorCode {
     pub fn to_rgba_u32(&self) -> u32 {
         ((self.r as u32) << 24) | ((self.g as u32) << 16) | ((self.b as u32) << 8) | (self.a as u32)
     }
+
+    pub fn to_rgb_u32(&self) -> u32 {
+        ((self.r as u32) << 16) | ((self.g as u32) << 8) | (self.b as u32)
+    }
 }
 
 #[cfg(test)]
