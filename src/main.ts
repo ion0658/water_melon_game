@@ -13,7 +13,6 @@ import { TickBall } from "./types";
 
 const canvas = document.getElementById("main_canvas") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-//const gl_ctx = canvas.getContext("webgl") as WebGLRenderingContext;
 const score_elm = document.getElementById("current_score") as HTMLOutputElement;
 const range_input_elm = document.getElementById("drop_point") as HTMLInputElement;
 
@@ -106,7 +105,6 @@ document.getElementById("drop_point")?.addEventListener("input", (e) => {
 
 function clear_canvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    //gl_ctx.clearColor(0.0, 0.0, 0.0, 1.0);
 }
 
 function draw_border() {
