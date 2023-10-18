@@ -85,7 +85,7 @@ impl Game {
             .any(|ball| ball.get_point().y + ball.get_radius() < PLAY_AREA.y - BOX_AREA_HEIGHT)
     }
 
-    pub fn tick(&mut self) -> Result<JsValue, JsValue> {
+    fn tick_impl(&mut self) -> TickData {
         let mut i = 0;
         while i < self.balls.len() {
             let mut ball = self.balls[i];
@@ -156,12 +156,24 @@ impl Game {
             self.balls[i] = ball;
             i += 1;
         }
-        let tick_data = TickData {
+        TickData {
             balls: self.balls.clone(),
             drop_queue: self.drop_queue,
             score: self.score,
-        };
+        }
+    }
+
+    #[cfg(target_arch = "wasm32")]
+    pub fn tick(&mut self) -> Result<JsValue, JsValue> {
+        let tick_data = self.tick_impl();
         Ok(serde_wasm_bindgen::to_value(&tick_data)?)
+    }
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+impl Game {
+    pub fn tick(&mut self) -> TickData {
+        self.tick_impl()
     }
 }
 
