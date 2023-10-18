@@ -4,17 +4,15 @@
     "version": "0.0.0",
     "type": "module",
     "scripts": {
-        "wasm": "wasm-pack build ./wasm-lib --target web",
-        "dev": "npm run wasm && vite",
-        "build": "npm run wasm && tsc && vite build",
+        "prestart": "wasm-pack build ./wasm-lib --target web",
+        "start": "vite",
+        "prebuild": "wasm-pack build ./wasm-lib --target web",
+        "build": "tsc && vite build",
         "preview": "vite preview",
-        "test": "npm run wasm  && cd ./wasm-lib && cargo test"
-    },
-    "dependencies": {
-        "wasm-lib": "file:./wasm-lib/pkg"
+        "pretest": "wasm-pack build ./wasm-lib --target web",
+        "test": "cd ./wasm-lib && cargo test"
     },
     "devDependencies": {
-        "@types/wasm-lib": "file:./wasm-lib/pkg",
         "typescript": "^5.0.2",
         "vite": "^4.4.11",
         "wasm-pack": "^0.12.1"

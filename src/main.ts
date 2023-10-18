@@ -8,7 +8,7 @@ import init, {
     get_radius,
     get_droppable_large_ball_radius,
     get_drop_area_height,
-} from "wasm-lib";
+} from "../wasm-lib/pkg";
 import { TickBall } from "./types";
 
 const canvas = document.getElementById("main_canvas") as HTMLCanvasElement;
