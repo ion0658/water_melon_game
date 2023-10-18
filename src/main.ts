@@ -1,5 +1,5 @@
 import "./style.css";
-import { FRAME_TIME_MSEC, PLAY_AREA_PADDING, FPS } from "./constants";
+import { PLAY_AREA_PADDING, FPS } from "./constants";
 import init, {
     reset as game_reset,
     Game,
@@ -13,6 +13,7 @@ import { TickBall } from "./types";
 
 const canvas = document.getElementById("main_canvas") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+//const gl_ctx = canvas.getContext("webgl") as WebGLRenderingContext;
 const score_elm = document.getElementById("current_score") as HTMLOutputElement;
 const range_input_elm = document.getElementById("drop_point") as HTMLInputElement;
 
@@ -53,7 +54,7 @@ function reset() {
 }
 
 function main_loop() {
-    setTimeout(main_loop, FRAME_TIME_MSEC);
+    window.requestAnimationFrame(main_loop);
     if (game.is_game_over()) {
         alert(`Game Over! Your score is ${score}!`);
         save_score(score);
@@ -105,6 +106,7 @@ document.getElementById("drop_point")?.addEventListener("input", (e) => {
 
 function clear_canvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //gl_ctx.clearColor(0.0, 0.0, 0.0, 1.0);
 }
 
 function draw_border() {
