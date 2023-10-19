@@ -1,14 +1,5 @@
 import "./style.css";
 import * as CONSTANTS from "./constants";
-// import init, {
-//     reset as game_reset,
-//     Game,
-//     get_play_area,
-//     get_color,
-//     get_radius,
-//     get_droppable_large_ball_radius,
-//     get_drop_area_height,
-// } from "../wasm-lib/pkg";
 import init, * as wasm from "../wasm-lib/pkg";
 import { TickBall, TickGame } from "./types";
 import * as PIXI from "pixi.js";
@@ -65,7 +56,6 @@ function game_loop() {
 
 function draw_loop(ctx: PIXI.Application) {
     window.requestAnimationFrame(() => draw_loop(ctx));
-    clear_canvas(ctx);
     draw(ctx);
 }
 
@@ -81,7 +71,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     document.getElementById("game_area")?.appendChild(ctx.view as HTMLCanvasElement);
     reset();
-    //main_loop(ctx);
     game_loop();
     draw_loop(ctx);
 });
@@ -114,10 +103,6 @@ document.getElementById("drop_point")?.addEventListener("input", (e) => {
     const x = Number(input.value);
     game.set_drop_x(x);
 });
-
-function clear_canvas(ctx: PIXI.Application) {
-    ctx.stage.removeChildren();
-}
 
 function draw_border(ctx: PIXI.Application) {
     const play_area = wasm.get_play_area();
@@ -242,6 +227,7 @@ function draw_balls(ctx: PIXI.Application) {
 }
 
 function draw(ctx: PIXI.Application) {
+    ctx.stage.removeChildren();
     draw_balls(ctx);
     draw_border(ctx);
 
