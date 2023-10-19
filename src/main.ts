@@ -1,14 +1,5 @@
 import "./style.css";
 import * as CONSTANTS from "./constants";
-// import init, {
-//     reset as game_reset,
-//     Game,
-//     get_play_area,
-//     get_color,
-//     get_radius,
-//     get_droppable_large_ball_radius,
-//     get_drop_area_height,
-// } from "../wasm-lib/pkg";
 import init, * as wasm from "../wasm-lib/pkg";
 import { TickBall, TickGame } from "./types";
 import * as PIXI from "pixi.js";
