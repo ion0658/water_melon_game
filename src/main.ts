@@ -74,9 +74,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     game_loop();
     draw_loop(ctx);
     (ctx.view as HTMLCanvasElement).addEventListener("click", (e) => {
-        const rect = (ctx.view as HTMLCanvasElement).getBoundingClientRect();
+        const rect = (e.target as HTMLCanvasElement).getBoundingClientRect();
         const x = e.clientX - rect.left;
         game?.set_drop_x(x);
+    });
+
+    (document.querySelector("#drop_point") as HTMLInputElement).style.width = `${play_area.x}px`;
+    document.querySelectorAll("button").forEach((elm) => {
+        elm.style.width = `${play_area.x}px`;
     });
 });
 
