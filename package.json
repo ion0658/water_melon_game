@@ -1,23 +1,23 @@
 {
-    "name": "water_melon_game",
-    "private": true,
-    "version": "0.0.0",
-    "type": "module",
-    "scripts": {
-        "prestart": "wasm-pack build ./wasm-lib --target web",
-        "start": "vite",
-        "prebuild": "wasm-pack build ./wasm-lib --target web",
-        "build": "tsc && vite build",
-        "preview": "vite preview",
-        "pretest": "wasm-pack build ./wasm-lib --target web",
-        "test": "cd ./wasm-lib && cargo test"
-    },
-    "devDependencies": {
-        "typescript": "^5.0.2",
-        "vite": "^4.4.11",
-        "wasm-pack": "^0.12.1"
-    },
-    "dependencies": {
-        "pixi.js": "^7.3.1"
-    }
+  "name": "water_melon_game",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "prestart": "wasm-pack build ./wasm-lib --target web",
+    "start": "vite",
+    "prebuild": "wasm-pack build ./wasm-lib --target web",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "pretest": "wasm-pack build ./wasm-lib --target web",
+    "test": "cd ./wasm-lib && cargo test"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.2",
+    "vite": "^4.4.11",
+    "wasm-pack": "^0.12.1"
+  },
+  "dependencies": {
+    "pixi.js": "^7.3.1"
+  }
 }
