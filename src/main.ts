@@ -9,8 +9,8 @@ const range_input_elm = document.getElementById("drop_point") as HTMLInputElemen
 
 let score: number = 0;
 
-let game: wasm.Game;
-let tick_data: TickGame;
+let game: wasm.Game | null;
+let tick_data: TickGame | null;
 
 // save best 3 score to local storage
 function save_score(score: number) {
@@ -46,12 +46,12 @@ function reset() {
 
 function game_loop() {
     setTimeout(game_loop, CONSTANTS.FRAME_TIME_MSEC);
-    if (game.is_game_over()) {
+    if (game?.is_game_over()) {
         alert(`Game Over! Your score is ${score}!`);
         save_score(score);
         reset();
     }
-    tick_data = game.tick();
+    tick_data = game?.tick();
 }
 
 function draw_loop(ctx: PIXI.Application) {
@@ -73,35 +73,40 @@ document.addEventListener("DOMContentLoaded", async () => {
     reset();
     game_loop();
     draw_loop(ctx);
+    (ctx.view as HTMLCanvasElement).addEventListener("click", (e) => {
+        const rect = (ctx.view as HTMLCanvasElement).getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        game?.set_drop_x(x);
+    });
 });
 
 document.addEventListener("keydown", (e) => {
     if (e.key === " " || e.key === "Enter") {
-        game.drop(CONSTANTS.PLAY_AREA_PADDING);
+        game?.drop(CONSTANTS.PLAY_AREA_PADDING);
         return;
     }
 
     if (e.key === "ArrowLeft") {
         const x = Number(range_input_elm.value) - 1;
         range_input_elm.value = String(x);
-        game.set_drop_x(x);
+        game?.set_drop_x(x);
     }
     if (e.key === "ArrowRight") {
         const x = Number(range_input_elm.value) + 1;
         range_input_elm.value = String(x);
-        game.set_drop_x(x);
+        game?.set_drop_x(x);
     }
 });
 
 document.getElementById("drop_button")?.addEventListener("click", () => {
-    game.drop(CONSTANTS.PLAY_AREA_PADDING);
+    game?.drop(CONSTANTS.PLAY_AREA_PADDING);
 });
 
 document.getElementById("reset_button")?.addEventListener("click", reset);
 document.getElementById("drop_point")?.addEventListener("input", (e) => {
     const input = e.target as HTMLInputElement;
     const x = Number(input.value);
-    game.set_drop_x(x);
+    game?.set_drop_x(x);
 });
 
 function draw_border(ctx: PIXI.Application) {
@@ -216,14 +221,16 @@ function draw_drop_queue(ctx: PIXI.Application, queues: TickBall[]) {
 
 function draw_balls(ctx: PIXI.Application) {
     const tmp = tick_data;
-    const balls = tmp.balls;
-    const drop_queue = tmp.drop_queue;
-    const tick_score = tmp.score;
-    draw_drop_queue(ctx, drop_queue);
-    balls.forEach((ball: TickBall) => {
-        draw_ball(ctx, ball);
-    });
-    score = tick_score;
+    if (tmp) {
+        const balls = tmp.balls;
+        const drop_queue = tmp.drop_queue;
+        const tick_score = tmp.score;
+        draw_drop_queue(ctx, drop_queue);
+        balls.forEach((ball: TickBall) => {
+            draw_ball(ctx, ball);
+        });
+        score = tick_score;
+    }
 }
 
 function draw(ctx: PIXI.Application) {
