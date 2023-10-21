@@ -5,12 +5,7 @@ canvas {
 
 button {
     margin: 1rem auto;
-    width: 480px;
     height: 2rem;
-}
-
-#drop_point {
-    width: 480px;
 }
 
 #info_area {
