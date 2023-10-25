@@ -2,7 +2,7 @@ import "./style.css";
 import * as CONSTANTS from "./constants";
 import init, * as wasm from "../wasm-lib/pkg";
 import { TickBall, TickGame } from "./types";
-import * as PIXI from "pixi.js";
+//import * as PIXI from "pixi.js";
 
 const score_elm = document.getElementById("current_score") as HTMLOutputElement;
 const range_input_elm = document.getElementById("drop_point") as HTMLInputElement;
@@ -54,7 +54,7 @@ function game_loop() {
     tick_data = game?.tick();
 }
 
-function draw_loop(ctx: PIXI.Application) {
+function draw_loop(ctx: CanvasRenderingContext2D) {
     window.requestAnimationFrame(() => draw_loop(ctx));
     draw(ctx);
 }
@@ -63,17 +63,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     await init();
     const play_area = wasm.get_play_area();
     const droppable_largest_radius = wasm.get_droppable_large_ball_radius();
-    const ctx = new PIXI.Application({
-        antialias: true,
-        backgroundColor: 0xeeeeee,
-        width: play_area.x + droppable_largest_radius * 2 + CONSTANTS.PLAY_AREA_PADDING * 5,
-        height: play_area.y + CONSTANTS.PLAY_AREA_PADDING * 2,
-    });
-    document.getElementById("game_area")?.appendChild(ctx.view as HTMLCanvasElement);
+    const canvas = document.createElement("canvas");
+    canvas.width = play_area.x + droppable_largest_radius * 2 + CONSTANTS.PLAY_AREA_PADDING * 5;
+    canvas.height = play_area.y + CONSTANTS.PLAY_AREA_PADDING * 2;
+    document.getElementById("game_area")?.appendChild(canvas);
+    const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+
     reset();
     game_loop();
     draw_loop(ctx);
-    (ctx.view as HTMLCanvasElement).addEventListener("click", (e) => {
+
+    canvas.addEventListener("click", (e) => {
         const rect = (e.target as HTMLCanvasElement).getBoundingClientRect();
         const x = e.clientX - rect.left;
         game?.set_drop_x(x);
@@ -114,93 +114,93 @@ document.getElementById("drop_point")?.addEventListener("input", (e) => {
     game?.set_drop_x(x);
 });
 
-function draw_border(ctx: PIXI.Application) {
+function draw_border(ctx: CanvasRenderingContext2D) {
     const play_area = wasm.get_play_area();
     const drop_area_height = wasm.get_drop_area_height();
     const droppable_largest_radius = wasm.get_droppable_large_ball_radius();
-    const graphics = new PIXI.Graphics();
 
-    graphics.lineStyle(1, 0x222222, 1);
-    graphics.moveTo(CONSTANTS.PLAY_AREA_PADDING, CONSTANTS.PLAY_AREA_PADDING + drop_area_height);
-    graphics.lineTo(CONSTANTS.PLAY_AREA_PADDING, play_area.y + CONSTANTS.PLAY_AREA_PADDING);
-    graphics.lineTo(
+    ctx.beginPath();
+    ctx.fillStyle = "#222222";
+    ctx.moveTo(CONSTANTS.PLAY_AREA_PADDING, CONSTANTS.PLAY_AREA_PADDING + drop_area_height);
+    ctx.lineTo(CONSTANTS.PLAY_AREA_PADDING, play_area.y + CONSTANTS.PLAY_AREA_PADDING);
+    ctx.lineTo(
         play_area.x + CONSTANTS.PLAY_AREA_PADDING,
         play_area.y + CONSTANTS.PLAY_AREA_PADDING
     );
-    graphics.lineTo(
+    ctx.lineTo(
         play_area.x + CONSTANTS.PLAY_AREA_PADDING,
         CONSTANTS.PLAY_AREA_PADDING + drop_area_height
     );
-    graphics.endFill();
+    ctx.stroke();
+    ctx.closePath();
 
-    graphics.lineStyle(1, 0x7e7e7e);
-    graphics.moveTo(play_area.x + CONSTANTS.PLAY_AREA_PADDING * 2, CONSTANTS.PLAY_AREA_PADDING);
-    graphics.lineTo(
+    ctx.beginPath();
+    ctx.fillStyle = "#7e7e7e";
+    ctx.moveTo(play_area.x + CONSTANTS.PLAY_AREA_PADDING * 2, CONSTANTS.PLAY_AREA_PADDING);
+    ctx.lineTo(
         play_area.x + CONSTANTS.PLAY_AREA_PADDING * 2,
         CONSTANTS.PLAY_AREA_PADDING * 3 + droppable_largest_radius * 2
     );
-    graphics.lineTo(
+    ctx.lineTo(
         play_area.x + CONSTANTS.PLAY_AREA_PADDING * 4 + droppable_largest_radius * 2,
         CONSTANTS.PLAY_AREA_PADDING * 3 + droppable_largest_radius * 2
     );
-    graphics.lineTo(
+    ctx.lineTo(
         play_area.x + CONSTANTS.PLAY_AREA_PADDING * 4 + droppable_largest_radius * 2,
         CONSTANTS.PLAY_AREA_PADDING
     );
-    graphics.closePath();
-    graphics.endFill();
+    ctx.stroke();
+    ctx.closePath();
 
-    const text = new PIXI.Text("NEXT", {
-        fontFamily: "Arial",
-        fontSize: 10,
-        fontWeight: "lighter",
-        align: "center",
-        fontStyle: "normal",
-        fill: 0x7e7e7e,
-    });
-    text.x = play_area.x + CONSTANTS.PLAY_AREA_PADDING * 6 + droppable_largest_radius;
-    text.y = CONSTANTS.PLAY_AREA_PADDING * 4 + droppable_largest_radius * 2;
-
-    ctx.stage.addChild(graphics);
-    ctx.stage.addChild(text);
+    ctx.fillText(
+        "NEXT",
+        play_area.x + CONSTANTS.PLAY_AREA_PADDING * 6 + droppable_largest_radius,
+        CONSTANTS.PLAY_AREA_PADDING * 4 + droppable_largest_radius * 2
+    );
 }
 
-function draw_drop_line(ctx: PIXI.Application, ball: TickBall) {
+function draw_drop_line(ctx: CanvasRenderingContext2D, ball: TickBall) {
     const play_area = wasm.get_play_area();
-    const graphics = new PIXI.Graphics();
-    graphics.lineStyle(1, 0x7e7e7e);
-    graphics.moveTo(
+
+    ctx.beginPath();
+    ctx.strokeStyle = "#7e7e7e";
+    ctx.moveTo(
         ball.point.x + CONSTANTS.PLAY_AREA_PADDING,
         ball.point.y + wasm.get_radius(ball.ball_type) + CONSTANTS.PLAY_AREA_PADDING
     );
-    graphics.lineTo(
+    ctx.lineTo(
         ball.point.x + CONSTANTS.PLAY_AREA_PADDING,
         play_area.y + CONSTANTS.PLAY_AREA_PADDING
     );
-    graphics.endFill();
-    ctx.stage.addChild(graphics);
+    ctx.stroke();
+    ctx.closePath();
 }
 
-function draw_ball(ctx: PIXI.Application, ball: TickBall) {
-    const graphics = new PIXI.Graphics();
-    graphics.beginFill(wasm.get_color(ball.ball_type).to_rgb_u32());
-    graphics.drawCircle(
+function draw_ball(ctx: CanvasRenderingContext2D, ball: TickBall) {
+    ctx.beginPath();
+    ctx.fillStyle = `#${wasm.get_color(ball.ball_type).to_rgba_hex_string()}`;
+    ctx.arc(
         ball.point.x + CONSTANTS.PLAY_AREA_PADDING,
         ball.point.y + CONSTANTS.PLAY_AREA_PADDING,
-        wasm.get_radius(ball.ball_type)
+        wasm.get_radius(ball.ball_type),
+        0,
+        Math.PI * 2
     );
-    graphics.endFill();
-    graphics.lineStyle(1, 0x000000);
-    graphics.moveTo(
+    ctx.fill();
+    ctx.closePath();
+
+    ctx.beginPath();
+    ctx.strokeStyle = "#000000";
+    ctx.moveTo(
         ball.point.x + CONSTANTS.PLAY_AREA_PADDING,
         ball.point.y + CONSTANTS.PLAY_AREA_PADDING
     );
-    graphics.lineTo(
+    ctx.lineTo(
         ball.point.x + CONSTANTS.PLAY_AREA_PADDING + ball.center_line.x,
         ball.point.y + CONSTANTS.PLAY_AREA_PADDING + ball.center_line.y
     );
-    graphics.endFill();
-    ctx.stage.addChild(graphics);
+    ctx.stroke();
+    ctx.closePath();
 }
 
 function set_drop_range(ball: TickBall) {
@@ -210,7 +210,7 @@ function set_drop_range(ball: TickBall) {
     range_input_elm.value = String(ball.point.x);
 }
 
-function draw_drop_queue(ctx: PIXI.Application, queues: TickBall[]) {
+function draw_drop_queue(ctx: CanvasRenderingContext2D, queues: TickBall[]) {
     const play_area = wasm.get_play_area();
     const droppable_largest_radius = wasm.get_droppable_large_ball_radius();
     const first_ball = queues[0];
@@ -224,7 +224,7 @@ function draw_drop_queue(ctx: PIXI.Application, queues: TickBall[]) {
     draw_ball(ctx, second_ball);
 }
 
-function draw_balls(ctx: PIXI.Application) {
+function draw_balls(ctx: CanvasRenderingContext2D) {
     const tmp = tick_data;
     if (tmp) {
         const balls = tmp.balls;
@@ -238,8 +238,8 @@ function draw_balls(ctx: PIXI.Application) {
     }
 }
 
-function draw(ctx: PIXI.Application) {
-    ctx.stage.removeChildren();
+function draw(ctx: CanvasRenderingContext2D) {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     draw_balls(ctx);
     draw_border(ctx);
 
