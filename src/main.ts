@@ -239,9 +239,16 @@ function draw_balls(ctx: CanvasRenderingContext2D) {
 }
 
 function draw(ctx: CanvasRenderingContext2D) {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    draw_balls(ctx);
-    draw_border(ctx);
+    const tmp_ctx = document.createElement("canvas").getContext("2d");
+    if (tmp_ctx !== null) {
+        tmp_ctx.canvas.width = ctx.canvas.width;
+        tmp_ctx.canvas.height = ctx.canvas.height;
 
-    score_elm.textContent = String(score);
+        draw_balls(tmp_ctx);
+        draw_border(tmp_ctx);
+
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.drawImage(tmp_ctx.canvas, 0, 0);
+        score_elm.textContent = String(score);
+    }
 }
